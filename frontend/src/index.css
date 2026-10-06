@@ -1,0 +1,11 @@
+/* ============================================================
+   ENTRY STYLESHEET
+   Imports the project's plain-CSS files (no Tailwind).
+   Order matters: global variables/reset first, then reusable
+   component styles, then layout utilities, then page-specific
+   overrides.
+   ============================================================ */
+@import './styles/global.css';
+@import './styles/components.css';
+@import './styles/utilities.css';
+@import './styles/pages.css';
