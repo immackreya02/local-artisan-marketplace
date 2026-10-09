@@ -143,6 +143,57 @@
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
+/* ============================================================
+   INDIAN HERITAGE PALETTE OVERRIDES
+   1. Terracotta Warmth (Default)
+   2. Jaipur Royal Indigo (Cobalt Blue)
+   3. Kerala Emerald (Deep Forest Green)
+   ============================================================ */
+
+[data-palette="indigo"] {
+  --color-terracotta: #1E40AF;
+  --color-terracotta-light: #3B82F6;
+  --color-terracotta-dark: #1E3A8A;
+  --color-terracotta-10: rgba(30, 64, 175, 0.12);
+  --color-terracotta-15: rgba(30, 64, 175, 0.18);
+  --color-terracotta-5: rgba(30, 64, 175, 0.05);
+  --color-brand-icon-bg: #1E40AF;
+  --color-footer-brand-icon-bg: #1E40AF;
+}
+
+[data-palette="emerald"] {
+  --color-terracotta: #047857;
+  --color-terracotta-light: #10B981;
+  --color-terracotta-dark: #064E3B;
+  --color-terracotta-10: rgba(4, 120, 87, 0.12);
+  --color-terracotta-15: rgba(4, 120, 87, 0.18);
+  --color-terracotta-5: rgba(4, 120, 87, 0.05);
+  --color-brand-icon-bg: #047857;
+  --color-footer-brand-icon-bg: #047857;
+}
+
+[data-theme="dark"][data-palette="indigo"] {
+  --color-terracotta: #3B82F6;
+  --color-terracotta-light: #60A5FA;
+  --color-terracotta-dark: #2563EB;
+  --color-terracotta-10: rgba(59, 130, 246, 0.20);
+  --color-terracotta-15: rgba(59, 130, 246, 0.28);
+  --color-terracotta-5: rgba(59, 130, 246, 0.10);
+  --color-brand-icon-bg: #2563EB;
+  --color-footer-brand-icon-bg: #2563EB;
+}
+
+[data-theme="dark"][data-palette="emerald"] {
+  --color-terracotta: #10B981;
+  --color-terracotta-light: #34D399;
+  --color-terracotta-dark: #059669;
+  --color-terracotta-10: rgba(16, 185, 129, 0.20);
+  --color-terracotta-15: rgba(16, 185, 129, 0.28);
+  --color-terracotta-5: rgba(16, 185, 129, 0.10);
+  --color-brand-icon-bg: #059669;
+  --color-footer-brand-icon-bg: #059669;
+}
+
 
 * {
   box-sizing: border-box;

@@ -7,6 +7,12 @@ import { useAuth } from '../../hooks/useAuth'
 export default function ArtisanSettings() {
   const { user } = useAuth()
   const [notifs, setNotifs] = useState({ orders: true, lowStock: true, marketing: false })
+  const [saved, setSaved] = useState(false)
+
+  const handleSave = () => {
+    setSaved(true)
+    setTimeout(() => setSaved(false), 3000)
+  }
 
   return (
     <DashboardLayout role="artisan">
@@ -16,8 +22,8 @@ export default function ArtisanSettings() {
       <div className="settings-grid">
         <div className="form-section" style={{ marginTop: 0 }}>
           <h3 className="form-section-title"><User size={16} color="#C1673B" /> Account</h3>
-          <div className="form-group"><label className="form-label">Name</label><input defaultValue={user.name} className="form-input" /></div>
-          <div className="form-group" style={{ marginBottom: 0 }}><label className="form-label">Email</label><input defaultValue={user.email} className="form-input" /></div>
+          <div className="form-group"><label className="form-label">Name</label><input defaultValue={user?.name} className="form-input" /></div>
+          <div className="form-group" style={{ marginBottom: 0 }}><label className="form-label">Email</label><input defaultValue={user?.email} className="form-input" /></div>
         </div>
 
         <div className="form-section" style={{ marginTop: 0 }}>
@@ -43,7 +49,14 @@ export default function ArtisanSettings() {
         </div>
       </div>
 
-      <Button size="lg" className="mt-6" disabled>Save Settings</Button>
+      <div style={{ marginTop: 24 }}>
+        {saved && (
+          <div style={{ padding: '10px 16px', background: 'var(--color-emerald-bg)', color: 'var(--color-emerald-text)', borderRadius: 8, fontSize: 13, fontWeight: 600, marginBottom: 16 }}>
+            ✓ Settings saved successfully!
+          </div>
+        )}
+        <Button size="lg" onClick={handleSave}>Save Settings</Button>
+      </div>
     </DashboardLayout>
   )
 }

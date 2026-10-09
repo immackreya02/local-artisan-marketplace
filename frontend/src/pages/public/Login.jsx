@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { Mail, Lock, Eye, EyeOff, Sparkles, ShieldCheck, Truck } from 'lucide-react'
+import { Mail, Lock, Eye, EyeOff, Sparkles, ShieldCheck, Truck, ArrowLeft } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import Button from '../../components/common/Button'
 
@@ -117,6 +117,22 @@ export default function Login() {
 
       <div className="auth-form-side">
         <form onSubmit={submit} className="auth-card">
+          <Link
+            to="/"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 600,
+              color: 'var(--color-terracotta)',
+              marginBottom: 16,
+              textDecoration: 'none'
+            }}
+          >
+            <ArrowLeft size={16} /> Return to Marketplace
+          </Link>
+
           <h2 className="auth-title">Welcome Back</h2>
           <p className="auth-subtitle">Login to continue shopping or manage your business.</p>
 

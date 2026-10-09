@@ -7,6 +7,7 @@ const {
   getProductStats,
   getCategoryStats,
   getShopStats,
+  getIntelligenceReport,
   getSalesReport,
   exportSalesReportExcel,
   exportSalesReportPDF
@@ -25,6 +26,7 @@ router.get('/orders', getOrderStats);
 router.get('/products', getProductStats);
 router.get('/categories', getCategoryStats);
 router.get('/shops', getShopStats);
+router.get('/intelligence', getIntelligenceReport);
 
 // Report & Export Endpoints
 router.get('/sales', getSalesReport);

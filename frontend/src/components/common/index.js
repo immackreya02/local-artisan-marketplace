@@ -12,6 +12,7 @@ export { default as WhatsAppButton } from './WhatsAppButton'
 export { default as NotificationDropdown } from './NotificationDropdown'
 export { default as OTPModal } from './OTPModal'
 export { default as LanguageSelector } from './LanguageSelector'
+export { default as PaletteSelector } from './PaletteSelector'
 export { default as TestPaymentModal } from './TestPaymentModal'
 
 

@@ -14,6 +14,8 @@ import { useLanguage } from '../../hooks/useLanguage'
 import { getMonthlyTrend, hasMeaningfulTrend } from '../../utils/revenueTrend'
 import { api } from '../../services/api'
 
+import StockIntelligenceSection from '../../components/admin/StockIntelligenceSection'
+
 export default function AdminDashboard() {
   const { orders } = useOrders()
   const { products } = useProducts()
@@ -116,6 +118,9 @@ export default function AdminDashboard() {
           <div className="flex justify-between" style={{ fontSize: 14 }}><span style={{ color: 'var(--color-ink-55)' }}>{t('completedOrders', 'Completed Orders')}</span><span style={{ fontWeight: 600 }}>{orders.filter((o) => o.status === 'Delivered').length}</span></div>
         </div>
       </div>
+
+      {/* Sales & Stock Intelligence Section */}
+      <StockIntelligenceSection />
 
       <div className="grid-2">
         <div className="card card-pad">

@@ -1,18 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Bell, Check, Trash2, Mail, MessageSquare, PhoneCall, Sparkles, X } from 'lucide-react'
-import { communicationService } from '../../services/communicationService'
+import { Bell, Check, Trash2, Mail, MessageSquare, PhoneCall, X } from 'lucide-react'
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [sendingTest, setSendingTest] = useState(false)
   const dropdownRef = useRef(null)
 
   const fetchNotifications = async () => {
     try {
-      const token = localStorage.getItem('artisan_token')
+      const token = localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token')
       if (!token) return
 
       const res = await fetch('/api/notifications', {
@@ -30,7 +28,7 @@ export default function NotificationDropdown() {
 
   useEffect(() => {
     fetchNotifications()
-    const interval = setInterval(fetchNotifications, 15000) // Poll every 15s
+    const interval = setInterval(fetchNotifications, 5000) // Poll every 5s for fast updates
     return () => clearInterval(interval)
   }, [])
 
@@ -46,7 +44,7 @@ export default function NotificationDropdown() {
 
   const markAsRead = async (id) => {
     try {
-      const token = localStorage.getItem('artisan_token')
+      const token = localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token')
       await fetch(`/api/notifications/${id}/read`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` }
@@ -59,7 +57,7 @@ export default function NotificationDropdown() {
 
   const markAllAsRead = async () => {
     try {
-      const token = localStorage.getItem('artisan_token')
+      const token = localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token')
       await fetch('/api/notifications/read-all', {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` }
@@ -73,7 +71,7 @@ export default function NotificationDropdown() {
   const deleteNotification = async (id, e) => {
     e.stopPropagation()
     try {
-      const token = localStorage.getItem('artisan_token')
+      const token = localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token')
       await fetch(`/api/notifications/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
@@ -81,18 +79,6 @@ export default function NotificationDropdown() {
       fetchNotifications()
     } catch (err) {
       console.error('Error deleting notification:', err)
-    }
-  }
-
-  const handleTestDispatch = async () => {
-    setSendingTest(true)
-    const res = await communicationService.testDispatch({
-      title: 'Order Status Update',
-      message: 'Your artisan order #LAM-2026-8849 is out for delivery! Track on WhatsApp & Email.'
-    })
-    setSendingTest(false)
-    if (res.success) {
-      fetchNotifications()
     }
   }
 
@@ -187,14 +173,6 @@ export default function NotificationDropdown() {
             {notifications.length === 0 ? (
               <div style={{ padding: '32px 16px', textAlign: 'center', color: 'var(--color-ink-40)', fontSize: '13px' }}>
                 <p>No notifications yet</p>
-                <button
-                  type="button"
-                  onClick={handleTestDispatch}
-                  disabled={sendingTest}
-                  style={{ marginTop: '12px', fontSize: '12px', color: 'var(--color-terracotta)', fontWeight: 600, border: '1px solid var(--color-ink-10)', padding: '6px 12px', borderRadius: '99px' }}
-                >
-                  {sendingTest ? 'Dispatching...' : '🚀 Trigger Test Notification'}
-                </button>
               </div>
             ) : (
               notifications.map((item) => (
@@ -252,18 +230,10 @@ export default function NotificationDropdown() {
               borderTop: '1px solid var(--color-ink-08)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between'
+              justifyContent: 'center'
             }}
           >
             <span style={{ fontSize: '11px', color: 'var(--color-ink-50)' }}>Channels: WhatsApp • Email • SMS</span>
-            <button
-              type="button"
-              onClick={handleTestDispatch}
-              disabled={sendingTest}
-              style={{ fontSize: '11px', color: 'var(--color-terracotta)', fontWeight: 600 }}
-            >
-              {sendingTest ? 'Sending...' : '+ Test Alert'}
-            </button>
           </div>
         </div>
       )}

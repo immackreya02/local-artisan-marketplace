@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { User, Mail, Lock, Eye, EyeOff, Sparkles, ShoppingBag, Store, Tag, MapPin, Store as StoreIcon } from 'lucide-react'
+import { User, Mail, Lock, Eye, EyeOff, Sparkles, ShoppingBag, Store, Tag, MapPin, Store as StoreIcon, ArrowLeft } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useShops } from '../../hooks/useShops'
 import { categories } from '../../data/mockData'
@@ -112,6 +112,22 @@ export default function Register() {
 
       <div className="auth-form-side" style={{ paddingTop: 32, paddingBottom: 32 }}>
         <form onSubmit={submit} className="auth-card" style={{ maxWidth: 440 }}>
+          <Link
+            to="/"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 600,
+              color: 'var(--color-terracotta)',
+              marginBottom: 16,
+              textDecoration: 'none'
+            }}
+          >
+            <ArrowLeft size={16} /> Return to Marketplace
+          </Link>
+
           <h2 className="auth-title">{isSellerFlow ? 'Become a Seller' : 'Create Account'}</h2>
           <p className="auth-subtitle">{isSellerFlow ? 'Set up your artisan shop and start selling on Local Artisan Marketplace.' : 'Join as a Customer or Artisan.'}</p>
 

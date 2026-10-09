@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="site-footer-bottom">
-        © 2024 Local Artisan Marketplace. All rights reserved.
+        © Local Artisan Marketplace. All rights reserved.
       </div>
     </footer>
   )

@@ -14,17 +14,26 @@ export function ThemeProvider({ children }) {
     return 'light'
   })
 
+  const [palette, setPalette] = useState(() => {
+    return localStorage.getItem('artisan_palette') || 'terracotta'
+  })
+
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('artisan_theme', theme)
   }, [theme])
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-palette', palette)
+    localStorage.setItem('artisan_palette', palette)
+  }, [palette])
 
   const toggleTheme = () => {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'))
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, palette, setPalette }}>
       {children}
     </ThemeContext.Provider>
   )

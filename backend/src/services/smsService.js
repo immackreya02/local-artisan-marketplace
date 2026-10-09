@@ -27,26 +27,19 @@ const sendSMS = async ({ phone, message }) => {
     }
   }
 
-  // 2. Fast2SMS / MSG91 API Check
+  // 2. Fast2SMS API Check
   if (process.env.FAST2SMS_API_KEY) {
     try {
-      const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
-        method: 'POST',
-        headers: {
-          authorization: process.env.FAST2SMS_API_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          route: 'q',
-          message,
-          language: 'english',
-          flash: 0,
-          numbers: sanitizedPhone.replace(/\+/g, '')
-        })
-      });
+      const cleanNumber = sanitizedPhone.replace(/\D/g, '').slice(-10);
+      const apiUrl = `https://www.fast2sms.com/dev/bulkV2?authorization=${encodeURIComponent(process.env.FAST2SMS_API_KEY)}&route=q&message=${encodeURIComponent(message)}&language=english&flash=0&numbers=${cleanNumber}`;
+
+      const response = await fetch(apiUrl, { method: 'GET' });
       const data = await response.json();
-      console.log(`[SMS Service - Fast2SMS] Sent to ${sanitizedPhone}:`, data);
-      return { success: true, provider: 'fast2sms', response: data };
+      console.log(`[SMS Service - Fast2SMS] Dispatched to ${cleanNumber}:`, data);
+
+      if (data && (data.return === true || data.status_code === 200)) {
+        return { success: true, provider: 'fast2sms', response: data };
+      }
     } catch (error) {
       console.error(`[SMS Service - Fast2SMS Error]: ${error.message}`);
     }

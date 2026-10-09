@@ -5,6 +5,7 @@ import { useCart } from '../../hooks/useCart'
 import { useLanguage } from '../../hooks/useLanguage'
 import Button from '../common/Button'
 import ThemeToggle from '../common/ThemeToggle'
+import PaletteSelector from '../common/PaletteSelector'
 import LanguageSelector from '../common/LanguageSelector'
 import NotificationDropdown from '../common/NotificationDropdown'
 
@@ -48,6 +49,7 @@ export default function PublicNavbar() {
             {count > 0 && <span className="navbar-cart-count">{count}</span>}
           </button>
           <LanguageSelector />
+          <PaletteSelector />
           <ThemeToggle />
           {user && <NotificationDropdown />}
 

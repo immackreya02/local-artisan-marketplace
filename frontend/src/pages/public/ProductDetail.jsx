@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Package, Heart, Truck, ShieldCheck, RotateCcw, BadgeCheck, Store, PenLine, Star } from 'lucide-react'
+import { Package, Heart, Truck, ShieldCheck, RotateCcw, BadgeCheck, Store, PenLine, Star, ArrowLeft } from 'lucide-react'
 import PublicLayout from '../../components/layout/PublicLayout'
 import Swatch from '../../components/common/Swatch'
 import Rating from '../../components/common/Rating'
@@ -66,7 +66,7 @@ export default function ProductDetail() {
   }
   const category = categories.find((c) => c.id === product.category || c.slug === product.categorySlug || c.name === product.categoryName)
   const categoryLabel = product.categoryName || category?.name || product.category || ''
-  const reviews = allReviews.filter((r) => r.productId === product.id)
+  const reviews = allReviews.filter((r) => r.productId === product.id || r.productId === product._id || r.productId === productId)
   const related = products.filter((p) => isProductPubliclyVisible(p, shops) && (p.category === product.category || p.categorySlug === product.categorySlug) && p.id !== product.id).slice(0, 4)
   const discountPct = product.mrp > product.price ? Math.round((1 - product.price / product.mrp) * 100) : 0
   const isWishlisted = wishlist.includes(product.id)
@@ -112,10 +112,34 @@ export default function ProductDetail() {
 
   return (
     <PublicLayout>
-      <div className="container" style={{ paddingTop: 32 }}>
-        <p className="breadcrumb">
-          <Link to="/">{t('home')}</Link> / <Link to="/marketplace">{t('explore')}</Link> / {categoryLabel} / <span>{product.name}</span>
-        </p>
+      <div className="container" style={{ paddingTop: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="icon-btn back-btn"
+            title="Return to Marketplace Home"
+            aria-label="Return to Marketplace Home"
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: '50%',
+              background: 'var(--color-cream-dark)',
+              border: '1px solid var(--color-ink-10)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--color-ink)',
+              cursor: 'pointer'
+            }}
+          >
+            <ArrowLeft size={16} color="var(--color-ink)" />
+          </button>
+
+          <p className="breadcrumb" style={{ margin: 0 }}>
+            <Link to="/">{t('home')}</Link> / <Link to="/marketplace">{t('explore')}</Link> / {categoryLabel} / <span>{product.name}</span>
+          </p>
+        </div>
 
         <div className="pd-grid">
           <div className="pd-media">
@@ -176,7 +200,7 @@ export default function ProductDetail() {
               <WhatsAppButton
                 productName={product.name}
                 shopName={shop.name}
-                phone={shop.phone || '919876543210'}
+                phone={shop.phone || shop.ownerPhone || '919829045671'}
                 label={t('askWhatsApp')}
                 size="sm"
               />

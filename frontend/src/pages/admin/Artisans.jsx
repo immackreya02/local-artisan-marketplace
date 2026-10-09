@@ -108,7 +108,9 @@ export default function AdminArtisans() {
               <div><div className="artisan-card-stat-value">{orders.filter((o) => o.shopId === s.id).length}</div><div className="artisan-card-stat-label">Orders</div></div>
             </div>
             <div className="artisan-card-actions">
-              <Button size="sm" variant="outline" className="flex-1" disabled>View Details</Button>
+              <Link to={`/shop/${s.id}`} style={{ flex: 1 }}>
+                <Button size="sm" variant="outline" style={{ width: '100%' }}>View Details</Button>
+              </Link>
               {s.status === 'Pending' && (
                 <>
                   <Button size="sm" variant="success" className="flex-1" onClick={() => setShopAndUserStatus(s, 'Active')}>Approve</Button>

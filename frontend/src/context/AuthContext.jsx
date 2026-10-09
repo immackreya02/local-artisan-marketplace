@@ -119,6 +119,9 @@ export function AuthProvider({ children }) {
   const logout = () => {
     localStorage.removeItem('lam_token')
     localStorage.removeItem('lam_user')
+    localStorage.removeItem('artisan_token')
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
     dispatch({ type: 'LOGOUT' })
   }
 

@@ -1,5 +1,7 @@
 const API_URL = '/api/communication';
 
+const getToken = () => localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token');
+
 export const communicationService = {
   // Get WhatsApp direct chat link
   getWhatsAppLink: async ({ phone, productName, shopName, customMessage }) => {
@@ -11,8 +13,7 @@ export const communicationService = {
       if (customMessage) params.append('customMessage', customMessage);
 
       const res = await fetch(`${API_URL}/whatsapp-link?${params.toString()}`);
-      const data = await res.json();
-      return data;
+      return await res.json();
     } catch (error) {
       console.error('getWhatsAppLink error:', error);
       return { success: false, message: error.message };
@@ -22,7 +23,7 @@ export const communicationService = {
   // Send OTP
   sendOTP: async () => {
     try {
-      const token = localStorage.getItem('artisan_token');
+      const token = getToken();
       const res = await fetch(`${API_URL}/send-otp`, {
         method: 'POST',
         headers: {
@@ -40,7 +41,7 @@ export const communicationService = {
   // Verify OTP
   verifyOTP: async (otp) => {
     try {
-      const token = localStorage.getItem('artisan_token');
+      const token = getToken();
       const res = await fetch(`${API_URL}/verify-otp`, {
         method: 'POST',
         headers: {
@@ -59,7 +60,7 @@ export const communicationService = {
   // Get Notification Channel Preferences
   getPreferences: async () => {
     try {
-      const token = localStorage.getItem('artisan_token');
+      const token = getToken();
       const res = await fetch(`${API_URL}/preferences`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -73,7 +74,7 @@ export const communicationService = {
   // Update Notification Channel Preferences
   updatePreferences: async (payload) => {
     try {
-      const token = localStorage.getItem('artisan_token');
+      const token = getToken();
       const res = await fetch(`${API_URL}/preferences`, {
         method: 'PATCH',
         headers: {
@@ -92,7 +93,7 @@ export const communicationService = {
   // Send Test Multi-Channel Dispatch
   testDispatch: async ({ title, message }) => {
     try {
-      const token = localStorage.getItem('artisan_token');
+      const token = getToken();
       const res = await fetch(`${API_URL}/test-dispatch`, {
         method: 'POST',
         headers: {
