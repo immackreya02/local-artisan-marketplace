@@ -231,17 +231,46 @@ const googleLogin = async (req, res) => {
       });
     }
 
-    const { OAuth2Client } = require('google-auth-library');
     const googleClientId = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID || '1082345678901-placeholder.apps.googleusercontent.com';
-    const client = new OAuth2Client(googleClientId);
 
     let payload;
     try {
-      const ticket = await client.verifyIdToken({
-        idToken: rawToken,
-        audience: googleClientId
-      });
-      payload = ticket.getPayload();
+      let OAuth2Client;
+      try {
+        OAuth2Client = require('google-auth-library').OAuth2Client;
+      } catch (e) {
+        OAuth2Client = null;
+      }
+
+      if (OAuth2Client) {
+        const client = new OAuth2Client(googleClientId);
+        const ticket = await client.verifyIdToken({
+          idToken: rawToken,
+          audience: googleClientId
+        });
+        payload = ticket.getPayload();
+      } else {
+        // Fallback: Verify token using Google tokeninfo REST API
+        const https = require('https');
+        payload = await new Promise((resolve, reject) => {
+          https.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(rawToken)}`, (response) => {
+            let body = '';
+            response.on('data', chunk => body += chunk);
+            response.on('end', () => {
+              try {
+                const parsed = JSON.parse(body);
+                if (parsed.error_description || parsed.error) {
+                  reject(new Error(parsed.error_description || parsed.error));
+                } else {
+                  resolve(parsed);
+                }
+              } catch (err) {
+                reject(err);
+              }
+            });
+          }).on('error', reject);
+        });
+      }
     } catch (err) {
       console.error('Google ID Token Verification Failed:', err.message);
       return res.status(401).json({
