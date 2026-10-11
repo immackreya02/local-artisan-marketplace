@@ -1,4 +1,8 @@
 const path = require('path');
+const dns = require('dns');
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+} catch (e) {}
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
@@ -22,15 +26,19 @@ const seedFullDatabase = async (skipConnect = false) => {
     if (!skipConnect && mongoose.connection.readyState !== 1) {
       const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/local_artisan_marketplace';
       try {
-        await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 2000 });
-        console.log('🌱 Connected to Local MongoDB for seeding full demo marketplace dataset...');
+        await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 15000 });
+        console.log(`🌱 Connected to MongoDB (${mongoUri.includes('mongodb+srv') ? 'Atlas Cloud' : 'Local'}) for seeding marketplace dataset...`);
       } catch (connErr) {
-        console.log('⚠️ Local MongoDB not found on 27017. Starting In-Memory MongoDB Server for Seeding...');
-        const { MongoMemoryServer } = require('mongodb-memory-server');
-        const mongoServer = await MongoMemoryServer.create({ instance: { ip: '127.0.0.1' } });
-        const inMemUri = mongoServer.getUri();
-        await mongoose.connect(inMemUri);
-        console.log('🌱 Connected to In-Memory MongoDB for seeding full demo dataset.');
+        console.log(`⚠️ Primary MongoDB connection failed (${connErr.message}).`);
+        try {
+          const { MongoMemoryServer } = require('mongodb-memory-server');
+          const mongoServer = await MongoMemoryServer.create({ instance: { ip: '127.0.0.1' } });
+          const inMemUri = mongoServer.getUri();
+          await mongoose.connect(inMemUri);
+          console.log('🌱 Connected to In-Memory MongoDB for seeding full demo dataset.');
+        } catch (memErr) {
+          throw new Error(`Failed to connect to MongoDB at ${mongoUri}: ${connErr.message}`);
+        }
       }
     }
 
