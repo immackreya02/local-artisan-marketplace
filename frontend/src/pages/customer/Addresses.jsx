@@ -55,9 +55,9 @@ export default function Addresses() {
       name: 'Home',
       phone: user?.phone || '',
       streetAddress: '',
-      city: 'Jaipur',
-      state: 'Rajasthan',
-      postalCode: '302016',
+      city: user?.location || '',
+      state: '',
+      postalCode: '',
       country: 'India',
       isDefault: addresses.length === 0
     })
@@ -71,9 +71,9 @@ export default function Addresses() {
       name: raw.name || addr.label || 'Home',
       phone: raw.phone || addr.phone || '',
       streetAddress: raw.streetAddress || addr.line1 || '',
-      city: raw.city || 'Jaipur',
-      state: raw.state || 'Rajasthan',
-      postalCode: raw.postalCode || '302016',
+      city: raw.city || '',
+      state: raw.state || '',
+      postalCode: raw.postalCode || '',
       country: raw.country || 'India',
       isDefault: Boolean(raw.isDefault || addr.default)
     })
