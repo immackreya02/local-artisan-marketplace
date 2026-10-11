@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { User, Mail, Lock, Eye, EyeOff, Sparkles, ShoppingBag, Store, Tag, MapPin, Store as StoreIcon, ArrowLeft } from 'lucide-react'
+import { User, Mail, Lock, Eye, EyeOff, Sparkles, ShoppingBag, Store, Tag, MapPin, Store as StoreIcon, ArrowLeft, Phone } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useShops } from '../../hooks/useShops'
 import { categories } from '../../data/mockData'
@@ -22,8 +22,8 @@ export default function Register() {
   // has no query param, defaults to Customer, and keeps the toggle.
   const isSellerFlow = params.get('role') === 'artisan'
   const [role, setRole] = useState(isSellerFlow ? 'artisan' : 'customer')
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', agree: false })
-  const [shop, setForm2] = useState({ shopName: '', category: 'Pottery', otherCategory: '', location: '', description: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', agree: false, phone: '' })
+  const [shop, setForm2] = useState({ shopName: '', category: 'Pottery', otherCategory: '', location: '', description: '', phone: '' })
   const [showPw, setShowPw] = useState(false)
   const [error, setError] = useState('')
   const [fieldErrors, setFieldErrors] = useState({})
@@ -40,6 +40,7 @@ export default function Register() {
     else if (form.password.length < 6) errors.password = 'Password must be at least 6 characters.'
     if (form.confirm !== form.password) errors.confirm = 'Passwords do not match.'
     if (role === 'artisan' && !shop.shopName.trim()) errors.shopName = 'Shop name is required for artisan accounts.'
+    if (role === 'artisan' && !shop.phone.trim()) errors.phone = 'Contact phone number is required for buyer inquiries.'
     if (role === 'artisan' && shop.category === 'Other' && !shop.otherCategory.trim()) errors.otherCategory = 'Please specify your category.'
     if (!form.agree) errors.agree = 'You must agree to the Terms of Service.'
     return errors
@@ -58,7 +59,8 @@ export default function Register() {
 
     const res = await register({
       name: form.name, email: form.email, password: form.password, role,
-      shop: role === 'artisan' ? { name: shop.shopName, category: finalCategory, location: shop.location, description: shop.description } : undefined,
+      phone: shop.phone || form.phone,
+      shop: role === 'artisan' ? { name: shop.shopName, category: finalCategory, location: shop.location, description: shop.description, phone: shop.phone } : undefined,
     })
     if (!res.ok) return setError(res.error)
 
@@ -77,7 +79,7 @@ export default function Register() {
         verified: false,
         status: 'Pending',
         years: 0,
-        phone: '',
+        phone: shop.phone || form.phone || '+91 98765 43210',
         email: form.email,
         description: shop.description,
         image: 'shop',
@@ -194,12 +196,22 @@ export default function Register() {
               <div className="shop-details-title"><StoreIcon size={14} /> Shop Details</div>
               <div className="form-group">
                 <label className="form-label">Shop Name</label>
-                <div className={`form-input-wrap${fieldErrors.shopName ? ' form-input-error' : ''}`} style={{ background: '#fff' }}>
+                <div className={`form-input-wrap${fieldErrors.shopName ? ' form-input-error' : ''}`}>
                   <Tag size={14} className="form-input-icon" />
                   <input value={shop.shopName} onChange={setShop('shopName')} placeholder="Terracotta Tales" />
                 </div>
                 {fieldErrors.shopName && <p className="form-error">{fieldErrors.shopName}</p>}
               </div>
+
+              <div className="form-group">
+                <label className="form-label">WhatsApp / Contact Phone Number (Required for Buyer Inquiries)</label>
+                <div className={`form-input-wrap${fieldErrors.phone ? ' form-input-error' : ''}`}>
+                  <Phone size={14} className="form-input-icon" />
+                  <input value={shop.phone} onChange={setShop('phone')} placeholder="+91 98765 43210" />
+                </div>
+                {fieldErrors.phone && <p className="form-error">{fieldErrors.phone}</p>}
+              </div>
+
               <div className="grid-2" style={{ gap: 12, marginBottom: 12 }}>
                 <div>
                   <label className="form-label">Business Category</label>
@@ -210,7 +222,7 @@ export default function Register() {
                 </div>
                 <div>
                   <label className="form-label">Location</label>
-                  <div className="form-input-wrap" style={{ background: '#fff' }}>
+                  <div className="form-input-wrap">
                     <MapPin size={14} className="form-input-icon" />
                     <input value={shop.location} onChange={setShop('location')} placeholder="Jaipur, Rajasthan" />
                   </div>
@@ -219,7 +231,7 @@ export default function Register() {
               {shop.category === 'Other' && (
                 <div className="form-group">
                   <label className="form-label">Please specify your category</label>
-                  <div className={`form-input-wrap${fieldErrors.otherCategory ? ' form-input-error' : ''}`} style={{ background: '#fff' }}>
+                  <div className={`form-input-wrap${fieldErrors.otherCategory ? ' form-input-error' : ''}`}>
                     <Tag size={14} className="form-input-icon" />
                     <input value={shop.otherCategory} onChange={setShop('otherCategory')} placeholder="e.g. Leatherwork" />
                   </div>
@@ -228,7 +240,7 @@ export default function Register() {
               )}
               <div>
                 <label className="form-label">Shop Description</label>
-                <textarea value={shop.description} onChange={setShop('description')} rows={3} placeholder="Handcrafted terracotta pottery..." className="form-textarea" style={{ background: '#fff' }} />
+                <textarea value={shop.description} onChange={setShop('description')} rows={3} placeholder="Handcrafted terracotta pottery..." className="form-textarea" />
               </div>
             </div>
           )}

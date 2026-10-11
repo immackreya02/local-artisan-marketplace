@@ -33,18 +33,18 @@ const handmadeReasons = [
 const customerSteps = ['Browse Shops', 'Order Products', 'Track Orders', 'Leave Reviews']
 const sellerSteps = ['Register Shop', 'Add Products', 'Manage Orders', 'Grow Business']
 
-const makers = [
-  { title: 'Handmade Artists', desc: 'Showcase your unique handcrafted art to a nationwide audience.', image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&auto=format&fit=crop' },
-  { title: 'Home Bakers', desc: 'Sell fresh cakes, cookies, and treats to your local community.', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop' },
-  { title: 'Home Boutique Owners', desc: 'Bring your curated fashion and textile collections online.', image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&auto=format&fit=crop' },
-  { title: 'Art & Craft Businesses', desc: 'Reach buyers who love authentic clay and craft creations.', image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&auto=format&fit=crop' },
-]
-
 export default function Home() {
   const { shops } = useShops()
   const { products } = useProducts()
   const { reviews } = useReviews()
   const { t } = useLanguage()
+
+  const makers = [
+    { title: t('maker1Title') || 'Handmade Artists', desc: t('maker1Desc') || 'Showcase your unique handcrafted art to a nationwide audience.', image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&auto=format&fit=crop' },
+    { title: t('maker2Title') || 'Home Bakers', desc: t('maker2Desc') || 'Sell fresh cakes, cookies, and treats to your local community.', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop' },
+    { title: t('maker3Title') || 'Home Boutique Owners', desc: t('maker3Desc') || 'Bring your curated fashion and textile collections online.', image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&auto=format&fit=crop' },
+    { title: t('maker4Title') || 'Art & Craft Businesses', desc: t('maker4Desc') || 'Reach buyers who love authentic clay and craft creations.', image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&auto=format&fit=crop' },
+  ]
 
   const features = [
     { icon: Store, title: t('feat1Title'), desc: t('feat1Desc') },
@@ -62,13 +62,6 @@ export default function Home() {
 
   const customerSteps = [t('stepBrowse'), t('stepOrder'), t('stepTrack'), t('stepReview')]
   const sellerSteps = [t('stepRegister'), t('stepAddProd'), t('stepManageOrders'), t('stepGrow')]
-
-  const makers = [
-    { title: 'Handmade Artists', desc: 'Showcase your unique handcrafted art to a nationwide audience.', image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&auto=format&fit=crop' },
-    { title: 'Home Bakers', desc: 'Sell fresh cakes, cookies, and treats to your local community.', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&auto=format&fit=crop' },
-    { title: 'Home Boutique Owners', desc: 'Bring your curated fashion and textile collections online.', image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&auto=format&fit=crop' },
-    { title: 'Art & Craft Businesses', desc: 'Reach buyers who love authentic clay and craft creations.', image: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=600&auto=format&fit=crop' },
-  ]
 
   const exploreShops = shops.filter((s) => s.status === 'Active').slice(0, 4)
   const featuredProducts = getPublicProducts(products, shops).filter((p) => p.featured).slice(0, 8)
@@ -178,8 +171,8 @@ export default function Home() {
       <section className="section-cream-dark section">
         <div className="container">
           <div className="section-header">
-            <span className="eyebrow">Built For Makers</span>
-            <h2 className="section-title">Who is this platform for?</h2>
+            <span className="eyebrow">{t('whoIsPlatformForEyebrow') || 'Built For Makers'}</span>
+            <h2 className="section-title">{t('whoIsPlatformForTitle') || 'Who is this platform for?'}</h2>
           </div>
           <div className="grid-4">
             {makers.map((m) => (

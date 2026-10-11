@@ -21,6 +21,11 @@ exports.sendOTP = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
+    const { phone } = req.body;
+    if (phone && typeof phone === 'string' && phone.trim()) {
+      user.phone = phone.trim();
+    }
+
     const otpCode = generate6DigitOTP();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins expiry
 

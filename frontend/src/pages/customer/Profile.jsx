@@ -174,6 +174,7 @@ export default function Profile() {
       <OTPModal
         isOpen={isOTPModalOpen}
         onClose={() => setIsOTPModalOpen(false)}
+        phone={form.phone}
         onVerified={() => setPhoneVerified(true)}
       />
     </DashboardLayout>

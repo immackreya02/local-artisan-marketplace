@@ -124,7 +124,19 @@ export const translations = {
     emailNotifications: 'Email Notifications',
     whatsappAlerts: 'WhatsApp Order Alerts',
     smsAlerts: 'SMS & Delivery Alerts',
-    verifyOTP: 'Verify via OTP'
+    verifyOTP: 'Verify via OTP',
+
+    // Who is this platform for
+    whoIsPlatformForEyebrow: 'Built For Makers',
+    whoIsPlatformForTitle: 'Who is this platform for?',
+    maker1Title: 'Handmade Artists',
+    maker1Desc: 'Showcase your unique handcrafted art to a nationwide audience.',
+    maker2Title: 'Home Bakers',
+    maker2Desc: 'Sell fresh cakes, cookies, and treats to your local community.',
+    maker3Title: 'Home Boutique Owners',
+    maker3Desc: 'Bring your curated fashion and textile collections online.',
+    maker4Title: 'Art & Craft Businesses',
+    maker4Desc: 'Reach buyers who love authentic clay and craft creations.'
   },
 
   hi: {
@@ -241,7 +253,19 @@ export const translations = {
     emailNotifications: 'ईमेल सूचनाएं',
     whatsappAlerts: 'व्हाट्सएप ऑर्डर अलर्ट',
     smsAlerts: 'एसएमएस और डिलीवरी अलर्ट',
-    verifyOTP: 'ओटीपी से सत्यापित करें'
+    verifyOTP: 'ओटीपी से सत्यापित करें',
+
+    // Who is this platform for
+    whoIsPlatformForEyebrow: 'कारीगरों के लिए',
+    whoIsPlatformForTitle: 'यह मंच किसके लिए है?',
+    maker1Title: 'हस्तनिर्मित कलाकार',
+    maker1Desc: 'देश भर के खरीदारों को अपनी अनूठी हस्तकला प्रदर्शित करें।',
+    maker2Title: 'होम बेकर्स',
+    maker2Desc: 'अपने स्थानीय समुदाय को ताजा केक और मिठाइयां बेचें।',
+    maker3Title: 'होम बुटीक मालिक',
+    maker3Desc: 'अपने फैशन और कपड़ा संग्रह को ऑनलाइन लाएं।',
+    maker4Title: 'कला और शिल्प व्यवसाय',
+    maker4Desc: 'उन खरीदारों तक पहुंचें जो प्रामाणिक कलाकृतियों से प्यार करते हैं।'
   },
 
   ta: {
@@ -358,7 +382,19 @@ export const translations = {
     emailNotifications: 'மின்னஞ்சல் அறிவிப்புகள்',
     whatsappAlerts: 'வாட்ஸ்அப் எச்சரிக்கைகள்',
     smsAlerts: 'எஸ்எம்எஸ் எச்சரிக்கைகள்',
-    verifyOTP: 'OTP மூலம் சரிபார்'
+    verifyOTP: 'OTP மூலம் சரிபார்',
+
+    // Who is this platform for
+    whoIsPlatformForEyebrow: 'கைவினைஞர்களுக்காக',
+    whoIsPlatformForTitle: 'இந்த தளம் யாருக்கானது?',
+    maker1Title: 'கைவினை கலைஞர்கள்',
+    maker1Desc: 'உங்கள் தனித்துவமான கைவினைப் பொருட்களை நாடு முழுவதும் காட்டுங்கள்.',
+    maker2Title: 'ஹோம் பேக்கர்ஸ்',
+    maker2Desc: 'புதிய கேக்குகள் மற்றும் இனிப்புகளை உள்ளூரில் விற்பனை செய்யுங்கள்.',
+    maker3Title: 'ஹோம் பொட்டிக் உரிமையாளர்கள்',
+    maker3Desc: 'உங்கள் ஆடை மற்றும் ஜவுளித் தொகுப்பை ஆன்லைனில் கொண்டு வாருங்கள்.',
+    maker4Title: 'கலை மற்றும் கைவினை வணிகங்கள்',
+    maker4Desc: 'பாரம்பரியக் கலைகளை விரும்பும் வாடிக்கையாளர்களை அடையுங்கள்.'
   },
 
   te: {

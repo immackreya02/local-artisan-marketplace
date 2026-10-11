@@ -137,7 +137,7 @@ export default function Marketplace() {
       }).length
       return {
         ...cat,
-        products: cat.products || matchCount
+        products: matchCount
       }
     })
   }, [categoriesList, products, shops])
@@ -163,11 +163,11 @@ export default function Marketplace() {
 
       // 3. Availability filter (matches ANY selected availability)
       if (selectedAvailability.length > 0) {
-        const pAvail = p.availabilityType || p.availability || ''
-        const normProduct = pAvail.replace(/\s+/g, '-').toLowerCase()
+        const pAvail = p.availabilityType || p.availability || 'Ready to Ship'
+        const cleanP = pAvail.toLowerCase().replace(/[\s\-_]+/g, '')
         const matchesAvail = selectedAvailability.some((avail) => {
-          const normFilter = avail.replace(/\s+/g, '-').toLowerCase()
-          return normProduct === normFilter || pAvail.toLowerCase() === avail.toLowerCase()
+          const cleanF = avail.toLowerCase().replace(/[\s\-_]+/g, '')
+          return cleanP === cleanF
         })
         if (!matchesAvail) return false
       }

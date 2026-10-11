@@ -76,13 +76,14 @@ export function AuthProvider({ children }) {
     }
   }
 
-  const register = async ({ name, email, password, role, shop }) => {
+  const register = async ({ name, email, password, role, shop, phone }) => {
     try {
       const payload = {
         name,
         email,
         password,
         role: role || 'customer',
+        phone: phone || shop?.phone || '',
         shopName: shop?.name || shop?.shopName || '',
         location: shop?.location || '',
       }

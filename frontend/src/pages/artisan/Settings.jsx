@@ -1,15 +1,27 @@
 import { useState } from 'react'
-import { Bell, Lock, CreditCard, User } from 'lucide-react'
+import { Bell, Lock, CreditCard, User, Phone } from 'lucide-react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/common/Button'
 import { useAuth } from '../../hooks/useAuth'
+import { useShops } from '../../hooks/useShops'
 
 export default function ArtisanSettings() {
-  const { user } = useAuth()
+  const { user, updateProfile } = useAuth()
+  const { getShopByOwnerId, updateShopDetails } = useShops()
+  const shop = getShopByOwnerId(user?.id)
+
+  const [name, setName] = useState(user?.name || '')
+  const [phone, setPhone] = useState(user?.phone || shop?.phone || '')
   const [notifs, setNotifs] = useState({ orders: true, lowStock: true, marketing: false })
   const [saved, setSaved] = useState(false)
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    if (updateProfile) {
+      await updateProfile({ name, phone })
+    }
+    if (shop?.id && updateShopDetails) {
+      updateShopDetails(shop.id, { phone, owner: name })
+    }
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
   }
@@ -22,8 +34,18 @@ export default function ArtisanSettings() {
       <div className="settings-grid">
         <div className="form-section" style={{ marginTop: 0 }}>
           <h3 className="form-section-title"><User size={16} color="#C1673B" /> Account</h3>
-          <div className="form-group"><label className="form-label">Name</label><input defaultValue={user?.name} className="form-input" /></div>
-          <div className="form-group" style={{ marginBottom: 0 }}><label className="form-label">Email</label><input defaultValue={user?.email} className="form-input" /></div>
+          <div className="form-group">
+            <label className="form-label">Name</label>
+            <input value={name} onChange={(e) => setName(e.target.value)} className="form-input" />
+          </div>
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input defaultValue={user?.email} disabled className="form-input" style={{ opacity: 0.7, cursor: 'not-allowed' }} />
+          </div>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label className="form-label">WhatsApp / Contact Phone Number</label>
+            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 98765 43210" className="form-input" />
+          </div>
         </div>
 
         <div className="form-section" style={{ marginTop: 0 }}>

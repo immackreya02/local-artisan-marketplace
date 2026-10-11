@@ -18,9 +18,9 @@ export const communicationService = {
   },
 
   // Send OTP
-  sendOTP: async () => {
+  sendOTP: async ({ phone } = {}) => {
     try {
-      return await api.post('/communication/send-otp', {});
+      return await api.post('/communication/send-otp', { phone });
     } catch (error) {
       console.error('sendOTP error:', error);
       return { success: false, message: error.message };

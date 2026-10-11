@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { ShieldCheck, MessageSquare, Mail, X } from 'lucide-react'
 import { communicationService } from '../../services/communicationService'
 
-export default function OTPModal({ isOpen, onClose, onVerified }) {
+export default function OTPModal({ isOpen, onClose, onVerified, phone = '' }) {
   const [step, setStep] = useState('request') // 'request' | 'verify'
   const [otpInput, setOtpInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,7 +16,7 @@ export default function OTPModal({ isOpen, onClose, onVerified }) {
     setLoading(true)
     setError('')
     setSuccessMsg('')
-    const res = await communicationService.sendOTP()
+    const res = await communicationService.sendOTP({ phone })
     setLoading(false)
 
     if (res.success) {
