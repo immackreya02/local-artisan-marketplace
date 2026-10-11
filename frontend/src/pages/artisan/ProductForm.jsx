@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { UploadCloud, Package, ShieldAlert } from 'lucide-react'
+import { UploadCloud, Package, ShieldAlert, Plus, Trash2 } from 'lucide-react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/common/Button'
 import Swatch from '../../components/common/Swatch'
@@ -17,10 +17,6 @@ export default function ProductForm() {
   const { user } = useAuth()
   const { getShopByOwnerId } = useShops()
   const shop = getShopByOwnerId(user.id)
-  // Single source of truth for the approval gate: read shop.status straight
-  // from ShopsContext rather than tracking a second flag anywhere. Only an
-  // Active (admin-approved) shop may publish - Pending, Rejected and
-  // Suspended shops (and having no shop at all) can only save drafts.
   const canPublish = shop?.status === 'Active'
   const publishBlockedReason = !shop
     ? 'Your account has no shop set up yet, so products can only be saved as drafts.'
@@ -34,19 +30,21 @@ export default function ProductForm() {
   const { products, addProduct, updateProduct } = useProducts()
   const existing = isEdit ? products.find((p) => p.id === productId) : null
 
+  const initialImages = existing?.images && existing.images.length > 0
+    ? existing.images
+    : (existing?.image ? [existing.image] : [])
+  const [images, setImages] = useState(initialImages)
+  const [urlInput, setUrlInput] = useState('')
+  const fileInputRef = useRef(null)
+
   const [form, setForm] = useState({
     name: existing?.name || '',
     category: existing?.category || categories[0].id,
     description: existing?.description || '',
-    // The Price field represents MRP (pre-discount price) - for an
-    // existing product we show its stored MRP here, not the already-
-    // discounted selling price, so re-editing doesn't compound the discount.
     price: existing?.mrp ?? existing?.price ?? '',
     discount: existing?.discount ?? 0,
     stock: existing?.stock ?? '',
     sku: existing?.sku || `LAM-${Math.floor(1000 + Math.random() * 9000)}`,
-    // Active/Inactive bug fix: reflect the product's actual stored status,
-    // not just "anything that isn't Draft".
     active: existing ? existing.status !== 'Inactive' : true,
     featured: existing?.featured || false,
     availabilityType: existing?.availabilityType || 'Ready to Ship',
@@ -54,6 +52,61 @@ export default function ProductForm() {
     limitedQuantity: existing?.limitedQuantity ?? '',
   })
   const [errors, setErrors] = useState({})
+
+  const handleFileUpload = (e) => {
+    const files = Array.from(e.target.files || [])
+    if (!files.length) return
+
+    files.forEach((file) => {
+      if (!file.type.startsWith('image/')) return
+
+      const reader = new FileReader()
+      reader.onload = (loadEvent) => {
+        const rawData = loadEvent.target.result
+        // Compress using canvas to ensure fast loading and optimal MongoDB doc size
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          const maxDim = 800
+          let width = img.width
+          let height = img.height
+
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width)
+              width = maxDim
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height)
+              height = maxDim
+            }
+          }
+
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82)
+          setImages((prev) => [...prev, compressedDataUrl])
+        }
+        img.src = rawData
+      }
+      reader.readAsDataURL(file)
+    })
+    e.target.value = ''
+  }
+
+  const handleAddUrl = () => {
+    if (urlInput.trim() && (urlInput.startsWith('http://') || urlInput.startsWith('https://') || urlInput.startsWith('data:'))) {
+      setImages((prev) => [...prev, urlInput.trim()])
+      setUrlInput('')
+    }
+  }
+
+  const handleRemoveImage = (index) => {
+    setImages((prev) => prev.filter((_, i) => i !== index))
+  }
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value }))
 
@@ -112,6 +165,7 @@ export default function ProductForm() {
       availability: normAvailability,
       productionTime: form.availabilityType === 'Made to Order' || form.availabilityType === 'Made-to-Order' ? form.productionTime : undefined,
       limitedQuantity: form.availabilityType === 'Limited Edition' ? Number(form.limitedQuantity) || 0 : undefined,
+      images: images.length > 0 ? images : ['https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80'],
     }
     if (isEdit) updateProduct(productId, payload)
     else addProduct(payload)
@@ -145,15 +199,77 @@ export default function ProductForm() {
         <div className="flex-col gap-6">
           <div className="form-section">
             <h3 className="form-section-title">Product Images</h3>
-            <div className="upload-box">
-              <UploadCloud size={22} />
-              <p style={{ fontSize: 14 }}>Drag &amp; drop images here</p>
-              <Button size="sm" variant="outline" type="button" disabled>Browse Files</Button>
+            
+            {/* Hidden file input */}
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              accept="image/*" 
+              multiple 
+              style={{ display: 'none' }} 
+              onChange={handleFileUpload} 
+            />
+
+            {/* Click to upload box */}
+            <div 
+              className="upload-box" 
+              onClick={() => fileInputRef.current?.click()}
+              style={{ cursor: 'pointer', border: '2px dashed var(--color-sand)', padding: '20px 16px', textAlign: 'center', borderRadius: '12px', background: 'var(--color-cream-light, #faf8f5)', transition: 'all 0.2s' }}
+            >
+              <UploadCloud size={28} style={{ color: 'var(--color-terracotta)', margin: '0 auto 6px' }} />
+              <p style={{ fontSize: 14, fontWeight: 600, margin: '0 0 4px', color: 'var(--color-ink)' }}>Click to Choose Images from Computer</p>
+              <p style={{ fontSize: 12, color: 'var(--color-ink-60)', margin: '0 0 10px' }}>Upload JPG, PNG, WEBP (saved permanently to MongoDB Atlas)</p>
+              <Button size="sm" variant="outline" type="button" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click() }}>
+                📁 Browse Computer Files
+              </Button>
             </div>
-            <div className="thumb-row">
-              {[0, 1, 2].map((i) => <Swatch key={i} seed={`img-${i}`} icon={Package} rounded="rounded-lg" style={{ width: 64, height: 64 }} />)}
-              <div className="thumb-add">+</div>
+
+            {/* Web URL fallback */}
+            <div style={{ marginTop: 12 }}>
+              <label style={{ fontSize: 12, fontWeight: 500, color: 'var(--color-ink-60)', display: 'block', marginBottom: 4 }}>Or Add via Image URL:</label>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input 
+                  type="url" 
+                  value={urlInput} 
+                  onChange={(e) => setUrlInput(e.target.value)} 
+                  placeholder="https://example.com/artisan-craft.jpg" 
+                  className="form-input" 
+                  style={{ flex: 1, height: 38, fontSize: 13 }} 
+                  onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddUrl(); } }}
+                />
+                <Button size="sm" type="button" variant="outline" onClick={handleAddUrl}>Add URL</Button>
+              </div>
             </div>
+
+            {/* Previews */}
+            {images.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-ink)', marginBottom: 8 }}>Product Photos ({images.length}):</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                  {images.map((imgSrc, idx) => (
+                    <div key={idx} style={{ position: 'relative', width: 72, height: 72, borderRadius: 8, overflow: 'hidden', border: '2px solid var(--color-sand)', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+                      <img src={imgSrc} alt={`Preview ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <button 
+                        type="button" 
+                        onClick={() => handleRemoveImage(idx)} 
+                        title="Remove image"
+                        style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(0,0,0,0.65)', color: '#fff', border: 'none', borderRadius: '50%', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 11 }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  <button 
+                    type="button" 
+                    onClick={() => fileInputRef.current?.click()} 
+                    style={{ width: 72, height: 72, borderRadius: 8, border: '2px dashed var(--color-terracotta)', background: '#fff', color: 'var(--color-terracotta)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 11, fontWeight: 500 }}
+                  >
+                    <Plus size={18} />
+                    <span>Add</span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="form-section">
