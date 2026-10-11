@@ -35,10 +35,16 @@ const sendEmail = async ({ to, subject, html, text }) => {
     const transporter = await createTransporter();
     const from = process.env.SMTP_FROM || '"Local Artisan Marketplace" <noreply@artisanmarketplace.com>';
 
+    // Forward demo / mock addresses to configured developer email so real emails land in your inbox
+    let destination = to;
+    if (!destination || destination.endsWith('@lam.in') || destination.includes('example.com') || destination.includes('@kanjeevaram.com')) {
+      destination = process.env.SMTP_USER || to;
+    }
+
     const info = await transporter.sendMail({
       from,
-      to,
-      subject,
+      to: destination,
+      subject: destination !== to ? `[Demo: ${to}] ${subject}` : subject,
       text: text || html.replace(/<[^>]*>?/gm, ''),
       html
     });

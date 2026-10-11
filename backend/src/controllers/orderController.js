@@ -215,8 +215,9 @@ const createOrder = async (req, res) => {
       }).catch(err => console.error('[Customer Order Notification Error]:', err));
 
       // 2. Dispatch notification to Artisan Shop Owner
-      if (shop && shop.artisan) {
-        User.findById(shop.artisan).then(artisanUser => {
+      const artisanId = group?.shop?.owner || group?.shop?.artisan;
+      if (artisanId) {
+        User.findById(artisanId).then(artisanUser => {
           if (artisanUser) {
             dispatchMultiChannelNotification({
               recipientUser: artisanUser,
@@ -231,7 +232,7 @@ const createOrder = async (req, res) => {
       }
 
       // 3. Dispatch notification to Admins for platform monitoring
-      User.find({ role: 'Admin' }).then(admins => {
+      User.find({ role: { $in: ['admin', 'Admin'] } }).then(admins => {
         admins.forEach(adminUser => {
           dispatchMultiChannelNotification({
             recipientUser: adminUser,
