@@ -9,7 +9,7 @@ const generateToken = require('../utils/generateToken');
  */
 const register = async (req, res) => {
   try {
-    const { name, email, password, role, shopName, location, phone } = req.body;
+    const { name, email, password, role, shopName, location, phone, description, category } = req.body;
 
     // 1. Mandatory field validation
     if (!name || !email || !password) {
@@ -79,11 +79,14 @@ const register = async (req, res) => {
     // 8. If Artisan, create initial Pending Shop storefront
     let createdShop = null;
     if (requestedRole === 'artisan') {
+      const finalDesc = description || (req.body.shop && req.body.shop.description) || 'Authentic handmade creations from local Indian artisans.';
+      const finalCategory = category || (req.body.shop && req.body.shop.category) || 'Handmade Crafts';
       createdShop = await Shop.create({
         name: shopName || `${name}'s Artisan Shop`,
         owner: user._id,
         ownerName: name,
-        description: 'New artisan shop pending approval',
+        category: finalCategory,
+        description: finalDesc,
         location: location || '',
         phone: phone || '',
         email: email.toLowerCase(),

@@ -154,7 +154,7 @@ export default function ProductForm() {
     const payload = {
       shop: shop.id || shop._id,
       name: form.name,
-      category: form.category,
+      category: form.category === 'Other' ? (form.customCategory?.trim() || 'Other') : form.category,
       description: form.description,
       mrp,
       discount,
@@ -214,11 +214,11 @@ export default function ProductForm() {
             <div 
               className="upload-box" 
               onClick={() => fileInputRef.current?.click()}
-              style={{ cursor: 'pointer', border: '2px dashed var(--color-sand)', padding: '20px 16px', textAlign: 'center', borderRadius: '12px', background: 'var(--color-cream-light, #faf8f5)', transition: 'all 0.2s' }}
+              style={{ cursor: 'pointer', border: '2px dashed var(--color-ink-20)', padding: '24px 16px', textAlign: 'center', borderRadius: '12px', background: 'var(--color-cream-dark)', transition: 'all 0.2s' }}
             >
-              <UploadCloud size={28} style={{ color: 'var(--color-terracotta)', margin: '0 auto 6px' }} />
+              <UploadCloud size={28} style={{ color: 'var(--color-terracotta)', margin: '0 auto 8px' }} />
               <p style={{ fontSize: 14, fontWeight: 600, margin: '0 0 4px', color: 'var(--color-ink)' }}>Click to Choose Images from Computer</p>
-              <p style={{ fontSize: 12, color: 'var(--color-ink-60)', margin: '0 0 10px' }}>Upload JPG, PNG, WEBP (saved permanently to MongoDB Atlas)</p>
+              <p style={{ fontSize: 12, color: 'var(--color-ink-60)', margin: '0 0 12px' }}>Upload JPG, PNG, WEBP (saved permanently to MongoDB Atlas)</p>
               <Button size="sm" variant="outline" type="button" onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click() }}>
                 📁 Browse Computer Files
               </Button>
@@ -262,7 +262,7 @@ export default function ProductForm() {
                   <button 
                     type="button" 
                     onClick={() => fileInputRef.current?.click()} 
-                    style={{ width: 72, height: 72, borderRadius: 8, border: '2px dashed var(--color-terracotta)', background: '#fff', color: 'var(--color-terracotta)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 11, fontWeight: 500 }}
+                    style={{ width: 72, height: 72, borderRadius: 8, border: '2px dashed var(--color-terracotta)', background: 'var(--color-cream-dark)', color: 'var(--color-terracotta)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 11, fontWeight: 500 }}
                   >
                     <Plus size={18} />
                     <span>Add</span>
@@ -283,8 +283,15 @@ export default function ProductForm() {
               <label className="form-label">Category</label>
               <select value={form.category} onChange={set('category')} className="form-select">
                 {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                <option value="Other">Other</option>
               </select>
             </div>
+            {form.category === 'Other' && (
+              <div className="form-group">
+                <label className="form-label">Please specify your category</label>
+                <input value={form.customCategory || ''} onChange={set('customCategory')} placeholder="e.g. Leatherwork, Metalcraft" className="form-input" />
+              </div>
+            )}
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label">Description</label>
               <textarea value={form.description} onChange={set('description')} rows={4} maxLength={500} className="form-textarea" />

@@ -44,10 +44,12 @@ export default function PublicNavbar() {
           <button onClick={() => navigate('/marketplace')} className="icon-btn" title="Search">
             <Search size={17} color="var(--color-ink-60)" />
           </button>
-          <button onClick={() => navigate('/cart')} className="icon-btn" title="Cart">
-            <ShoppingCart size={17} color="var(--color-ink-60)" />
-            {count > 0 && <span className="navbar-cart-count">{count}</span>}
-          </button>
+          {user?.role !== 'artisan' && (
+            <button onClick={() => navigate('/cart')} className="icon-btn" title="Cart">
+              <ShoppingCart size={17} color="var(--color-ink-60)" />
+              {count > 0 && <span className="navbar-cart-count">{count}</span>}
+            </button>
+          )}
           <LanguageSelector />
           <PaletteSelector />
           <ThemeToggle />

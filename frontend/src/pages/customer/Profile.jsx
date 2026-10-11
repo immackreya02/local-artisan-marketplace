@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { User, Mail, Phone, MapPin, Bell, MessageSquare, ShieldCheck, Check } from 'lucide-react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/common/Button'
-import OTPModal from '../../components/common/OTPModal'
 import { useAuth } from '../../hooks/useAuth'
 import { communicationService } from '../../services/communicationService'
 
@@ -18,8 +17,6 @@ export default function Profile() {
 
   // Notification Preferences State
   const [channels, setChannels] = useState({ email: true, sms: true, whatsapp: true })
-  const [isOTPModalOpen, setIsOTPModalOpen] = useState(false)
-  const [phoneVerified, setPhoneVerified] = useState(false)
 
   useEffect(() => {
     // Load notification preferences from server
@@ -82,19 +79,10 @@ export default function Profile() {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Phone Number (Required for SMS & WhatsApp Alerts)</label>
-            <div className="form-input-wrap" style={{ justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
-                <Phone size={14} className="form-input-icon" />
-                <input value={form.phone} onChange={set('phone')} placeholder="+91 98765 43210" />
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsOTPModalOpen(true)}
-                style={{ fontSize: '12px', color: phoneVerified ? 'var(--color-forest)' : 'var(--color-terracotta)', fontWeight: 600, background: 'var(--color-cream-dark)', padding: '4px 10px', borderRadius: '99px', border: 'none' }}
-              >
-                {phoneVerified ? '✓ Verified' : 'Verify via OTP'}
-              </button>
+            <label className="form-label">Phone Number (For SMS & WhatsApp Alerts)</label>
+            <div className="form-input-wrap">
+              <Phone size={14} className="form-input-icon" />
+              <input value={form.phone} onChange={set('phone')} placeholder="+91 98765 43210" />
             </div>
           </div>
 
@@ -170,13 +158,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-
-      <OTPModal
-        isOpen={isOTPModalOpen}
-        onClose={() => setIsOTPModalOpen(false)}
-        phone={form.phone}
-        onVerified={() => setPhoneVerified(true)}
-      />
     </DashboardLayout>
   )
 }

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Package, Trash2, ArrowLeft, ShieldCheck, Tag } from 'lucide-react'
 import PublicLayout from '../../components/layout/PublicLayout'
 import Swatch from '../../components/common/Swatch'
@@ -23,6 +23,12 @@ export default function Cart() {
   const { t } = useLanguage()
   const navigate = useNavigate()
   const [promo, setPromo] = useState('')
+
+  useEffect(() => {
+    if (user?.role === 'artisan') {
+      navigate('/artisan/dashboard')
+    }
+  }, [user, navigate])
 
   const gst = Math.round(subtotal * GST_RATE)
   const total = subtotal + gst

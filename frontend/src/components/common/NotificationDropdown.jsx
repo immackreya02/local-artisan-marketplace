@@ -188,38 +188,14 @@ export default function NotificationDropdown() {
                     {item.message}
                   </p>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '8px' }}>
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                      <span title="In-App Notification" style={{ fontSize: '10px', background: 'var(--color-cream-dark)', color: 'var(--color-ink-60)', padding: '2px 6px', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                        <Bell size={10} /> App
-                      </span>
-                      <span title="Email Sent" style={{ fontSize: '10px', background: 'var(--color-emerald-bg)', color: 'var(--color-emerald-text)', padding: '2px 6px', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                        <Mail size={10} /> Email
-                      </span>
-                      <span title="WhatsApp Alert" style={{ fontSize: '10px', background: 'rgba(37, 211, 102, 0.15)', color: '#16a34a', padding: '2px 6px', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                        <MessageSquare size={10} /> WA
-                      </span>
-                    </div>
-                    <span style={{ fontSize: '10px', color: 'var(--color-ink-40)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '6px' }}>
+                    <span style={{ fontSize: '11px', color: 'var(--color-ink-40)' }}>
                       {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                 </div>
               ))
             )}
-          </div>
-
-          <div
-            style={{
-              padding: '10px 16px',
-              background: 'var(--color-cream-dark)',
-              borderTop: '1px solid var(--color-ink-08)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <span style={{ fontSize: '11px', color: 'var(--color-ink-50)' }}>Channels: WhatsApp • Email • SMS</span>
           </div>
         </div>
       )}

@@ -85,6 +85,8 @@ export function AuthProvider({ children }) {
         role: role || 'customer',
         phone: phone || shop?.phone || '',
         shopName: shop?.name || shop?.shopName || '',
+        description: shop?.description || '',
+        category: shop?.category || '',
         location: shop?.location || '',
       }
       const res = await api.post('/auth/register', payload)

@@ -172,20 +172,26 @@ export default function ProductDetail() {
 
             <p className="pd-desc">{product.description}</p>
 
-            <div className="pd-actions-row">
-              <div className="qty-stepper">
-                <button onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={!purchasable}>–</button>
-                <span>{qty}</span>
-                <button
-                  onClick={() => setQty((q) => Math.max(1, Math.min(getMaxQuantity(product), q + 1)))}
-                  disabled={!purchasable || qty >= getMaxQuantity(product)}
-                >+</button>
+            {user?.role === 'artisan' ? (
+              <div style={{ padding: '12px 16px', background: 'var(--color-cream-dark)', borderRadius: 10, fontSize: 13, color: 'var(--color-ink-60)', border: '1px solid var(--color-ink-10)', display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
+                <span>🎨 <strong>Artisan Studio Account:</strong> Dedicated to craft selling & storefront management.</span>
               </div>
-              <Button size="lg" disabled={!purchasable} onClick={() => addToCart(product.id, qty)}>{t('addToCart')}</Button>
-              <button onClick={() => toggleWishlist(product.id)} className="pd-wishlist-btn">
-                <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} color={isWishlisted ? '#C1673B' : '#8a7f70'} />
-              </button>
-            </div>
+            ) : (
+              <div className="pd-actions-row">
+                <div className="qty-stepper">
+                  <button onClick={() => setQty((q) => Math.max(1, q - 1))} disabled={!purchasable}>–</button>
+                  <span>{qty}</span>
+                  <button
+                    onClick={() => setQty((q) => Math.max(1, Math.min(getMaxQuantity(product), q + 1)))}
+                    disabled={!purchasable || qty >= getMaxQuantity(product)}
+                  >+</button>
+                </div>
+                <Button size="lg" disabled={!purchasable} onClick={() => addToCart(product.id, qty)}>{t('addToCart')}</Button>
+                <button onClick={() => toggleWishlist(product.id)} className="pd-wishlist-btn">
+                  <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} color={isWishlisted ? '#C1673B' : '#8a7f70'} />
+                </button>
+              </div>
+            )}
 
             <div className="pd-trust-row">
               <span><Truck size={14} /> {t('freeShipping')}</span>
