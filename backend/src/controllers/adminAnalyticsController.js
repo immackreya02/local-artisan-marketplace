@@ -590,6 +590,7 @@ exports.getIntelligenceReport = async (req, res, next) => {
 
     // Top Performing Products (by Revenue)
     const topProducts = [...enrichedProducts]
+      .filter((p) => p.status === 'Active' && p.unitsSold > 0)
       .sort((a, b) => b.revenue - a.revenue || b.unitsSold - a.unitsSold)
       .slice(0, 5);
 
@@ -608,8 +609,8 @@ exports.getIntelligenceReport = async (req, res, next) => {
     // 2. Calculate sales per shop / artisan
     const shopSalesMap = {};
     for (const order of validOrders) {
-      const shopIdStr = order.shop ? order.shop._id.toString() : 'unknown';
-      const shopName = order.shop ? order.shop.name : 'Unknown Shop';
+      const shopIdStr = order.shop ? (order.shop._id ? order.shop._id.toString() : order.shop.toString()) : 'unknown';
+      const shopName = order.shop ? (order.shop.name || 'Unknown Shop') : 'Unknown Shop';
       if (!shopSalesMap[shopIdStr]) {
         shopSalesMap[shopIdStr] = { shopName, orders: 0, revenue: 0 };
       }
@@ -617,36 +618,29 @@ exports.getIntelligenceReport = async (req, res, next) => {
       shopSalesMap[shopIdStr].revenue += order.totalAmount || 0;
     }
 
-    const enrichedShops = allShops.map((s, idx) => {
+    // Only ACTIVE approved shops can be analyzed for sales performance
+    const activeShops = allShops.filter((s) => s.status === 'Active');
+
+    const enrichedShops = activeShops.map((s) => {
       const stats = shopSalesMap[s._id.toString()] || { orders: 0, revenue: 0 };
-      let ordersCount = stats.orders;
-      let revenue = stats.revenue;
-
-      if (revenue === 0) {
-        const seedOrders = [62, 24, 41, 38][idx % 4] || 15;
-        const seedRevenue = [142850, 98500, 80334, 48600][idx % 4] || 35000;
-        ordersCount = seedOrders;
-        revenue = seedRevenue;
-      }
-
       return {
         id: s._id,
         name: s.name,
-        location: s.location || 'Jaipur, Rajasthan',
-        status: s.status || 'Active',
-        orders: ordersCount,
-        revenue: Math.round(revenue * 100) / 100
+        location: s.location || 'India',
+        status: s.status,
+        orders: stats.orders,
+        revenue: Math.round(stats.revenue * 100) / 100
       };
     });
 
-    // Top Performing Shops
+    // Top Performing Shops: Active shops with actual sales, sorted by revenue descending
     const topShops = [...enrichedShops]
+      .filter((s) => s.orders > 0 || s.revenue > 0)
       .sort((a, b) => b.revenue - a.revenue || b.orders - a.orders)
       .slice(0, 5);
 
-    // Low Performing Shops (Active shops needing marketing push)
-    const lowShops = enrichedShops
-      .filter((s) => s.status === 'Active')
+    // Low Performing Shops: Active shops needing marketing push (lowest sales)
+    const lowShops = [...enrichedShops]
       .sort((a, b) => a.revenue - b.revenue || a.orders - b.orders)
       .slice(0, 5);
 
