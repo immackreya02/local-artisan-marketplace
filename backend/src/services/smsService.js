@@ -1,6 +1,6 @@
 /**
  * SMS Service for Local Artisan Marketplace
- * Supports Twilio / Fast2SMS API integration with seamless dev logger fallback.
+ * Powered by Fast2SMS API Gateway with development logger fallback.
  */
 
 const sendSMS = async ({ phone, message }) => {
@@ -8,23 +8,6 @@ const sendSMS = async ({ phone, message }) => {
   if (!sanitizedPhone) {
     console.warn('[SMS Service] Skipped: No phone number provided');
     return { success: false, reason: 'No phone number provided' };
-  }
-
-  // 1. Twilio Production SMS Provider Check
-  if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
-    try {
-      const twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-      const res = await twilio.messages.create({
-        body: message,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        to: sanitizedPhone.startsWith('+') ? sanitizedPhone : `+91${sanitizedPhone}`
-      });
-      console.log(`[SMS Service - Twilio] Sent to ${sanitizedPhone}, SID: ${res.sid}`);
-      return { success: true, sid: res.sid, provider: 'twilio' };
-    } catch (error) {
-      console.error(`[SMS Service - Twilio Error]: ${error.message}`);
-      // Fall through to dev logger
-    }
   }
 
   // 2. Fast2SMS API Check

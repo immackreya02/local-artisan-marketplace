@@ -1,6 +1,4 @@
-const API_URL = '/api/communication';
-
-const getToken = () => localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token');
+import { api } from './api';
 
 export const communicationService = {
   // Get WhatsApp direct chat link
@@ -12,8 +10,7 @@ export const communicationService = {
       if (shopName) params.append('shopName', shopName);
       if (customMessage) params.append('customMessage', customMessage);
 
-      const res = await fetch(`${API_URL}/whatsapp-link?${params.toString()}`);
-      return await res.json();
+      return await api.get(`/communication/whatsapp-link?${params.toString()}`);
     } catch (error) {
       console.error('getWhatsAppLink error:', error);
       return { success: false, message: error.message };
@@ -23,15 +20,7 @@ export const communicationService = {
   // Send OTP
   sendOTP: async () => {
     try {
-      const token = getToken();
-      const res = await fetch(`${API_URL}/send-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      });
-      return await res.json();
+      return await api.post('/communication/send-otp', {});
     } catch (error) {
       console.error('sendOTP error:', error);
       return { success: false, message: error.message };
@@ -41,16 +30,7 @@ export const communicationService = {
   // Verify OTP
   verifyOTP: async (otp) => {
     try {
-      const token = getToken();
-      const res = await fetch(`${API_URL}/verify-otp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ otp })
-      });
-      return await res.json();
+      return await api.post('/communication/verify-otp', { otp });
     } catch (error) {
       console.error('verifyOTP error:', error);
       return { success: false, message: error.message };
@@ -60,11 +40,7 @@ export const communicationService = {
   // Get Notification Channel Preferences
   getPreferences: async () => {
     try {
-      const token = getToken();
-      const res = await fetch(`${API_URL}/preferences`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      return await res.json();
+      return await api.get('/communication/preferences');
     } catch (error) {
       console.error('getPreferences error:', error);
       return { success: false, message: error.message };
@@ -74,16 +50,7 @@ export const communicationService = {
   // Update Notification Channel Preferences
   updatePreferences: async (payload) => {
     try {
-      const token = getToken();
-      const res = await fetch(`${API_URL}/preferences`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      });
-      return await res.json();
+      return await api.patch('/communication/preferences', payload);
     } catch (error) {
       console.error('updatePreferences error:', error);
       return { success: false, message: error.message };
@@ -93,19 +60,11 @@ export const communicationService = {
   // Send Test Multi-Channel Dispatch
   testDispatch: async ({ title, message }) => {
     try {
-      const token = getToken();
-      const res = await fetch(`${API_URL}/test-dispatch`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ title, message })
-      });
-      return await res.json();
+      return await api.post('/communication/test-dispatch', { title, message });
     } catch (error) {
       console.error('testDispatch error:', error);
       return { success: false, message: error.message };
     }
   }
 };
+

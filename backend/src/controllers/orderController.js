@@ -204,15 +204,45 @@ const createOrder = async (req, res) => {
 
       createdOrders.push(newOrder);
 
-      // Dispatch multi-channel notification across Email, SMS, WhatsApp, In-App Hub
+      // 1. Dispatch multi-channel notification to Customer
       dispatchMultiChannelNotification({
         recipientUser: req.user,
-        title: 'Order Confirmed!',
+        title: 'Order Confirmed! 🎉',
         message: `Your order #${newOrder.orderNumber || newOrder._id} has been placed successfully for ₹${newOrder.totalAmount.toLocaleString()}.`,
         type: 'Order',
         relatedId: newOrder._id,
         orderData: newOrder
-      }).catch(err => console.error('[Order Notification Error]:', err));
+      }).catch(err => console.error('[Customer Order Notification Error]:', err));
+
+      // 2. Dispatch notification to Artisan Shop Owner
+      if (shop && shop.artisan) {
+        User.findById(shop.artisan).then(artisanUser => {
+          if (artisanUser) {
+            dispatchMultiChannelNotification({
+              recipientUser: artisanUser,
+              title: 'New Order Received! 🛍️',
+              message: `You received new order #${newOrder.orderNumber || newOrder._id} for ₹${newOrder.totalAmount.toLocaleString()} from ${req.user.name || 'Customer'}.`,
+              type: 'Order',
+              relatedId: newOrder._id,
+              orderData: newOrder
+            }).catch(err => console.error('[Artisan Order Notification Error]:', err));
+          }
+        }).catch(err => console.error('[Artisan Lookup Error]:', err));
+      }
+
+      // 3. Dispatch notification to Admins for platform monitoring
+      User.find({ role: 'Admin' }).then(admins => {
+        admins.forEach(adminUser => {
+          dispatchMultiChannelNotification({
+            recipientUser: adminUser,
+            title: 'Platform Order Placed 📦',
+            message: `New order #${newOrder.orderNumber || newOrder._id} (₹${newOrder.totalAmount.toLocaleString()}) placed by ${req.user.name || 'Customer'}.`,
+            type: 'Order',
+            relatedId: newOrder._id,
+            orderData: newOrder
+          }).catch(err => console.error('[Admin Order Notification Error]:', err));
+        });
+      }).catch(err => console.error('[Admin Lookup Error]:', err));
     }
 
     // 6. Clear Customer Cart after successful order placement

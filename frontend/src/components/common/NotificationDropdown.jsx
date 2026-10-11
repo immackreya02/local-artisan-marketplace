@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Bell, Check, Trash2, Mail, MessageSquare, PhoneCall, X } from 'lucide-react'
+import { api } from '../../services/api'
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false)
@@ -13,11 +14,8 @@ export default function NotificationDropdown() {
       const token = localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token')
       if (!token) return
 
-      const res = await fetch('/api/notifications', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      const data = await res.json()
-      if (data.success && data.data) {
+      const data = await api.get('/notifications')
+      if (data && data.success && data.data) {
         setNotifications(data.data)
         setUnreadCount(data.unreadCount || 0)
       }
@@ -44,11 +42,7 @@ export default function NotificationDropdown() {
 
   const markAsRead = async (id) => {
     try {
-      const token = localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token')
-      await fetch(`/api/notifications/${id}/read`, {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      await api.patch(`/notifications/${id}/read`, {})
       fetchNotifications()
     } catch (err) {
       console.error('Error marking notification as read:', err)
@@ -57,11 +51,7 @@ export default function NotificationDropdown() {
 
   const markAllAsRead = async () => {
     try {
-      const token = localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token')
-      await fetch('/api/notifications/read-all', {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      await api.patch('/notifications/read-all', {})
       fetchNotifications()
     } catch (err) {
       console.error('Error marking all as read:', err)
@@ -71,11 +61,7 @@ export default function NotificationDropdown() {
   const deleteNotification = async (id, e) => {
     e.stopPropagation()
     try {
-      const token = localStorage.getItem('lam_token') || localStorage.getItem('token') || localStorage.getItem('artisan_token')
-      await fetch(`/api/notifications/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      await api.del(`/notifications/${id}`)
       fetchNotifications()
     } catch (err) {
       console.error('Error deleting notification:', err)
