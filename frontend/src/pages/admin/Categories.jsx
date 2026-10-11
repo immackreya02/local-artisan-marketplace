@@ -172,8 +172,8 @@ export default function AdminCategories() {
         {categories.map((c) => (
           <div key={c.id} className="category-mgmt-card" style={{ opacity: c.active ? 1 : 0.65 }}>
             <div className="category-mgmt-top">
-              <div className="category-mgmt-icon" style={{ background: c.active ? 'var(--color-terracotta-10, #FDF4E7)' : '#f0f0f0' }}>
-                <Layers size={16} color={c.active ? '#C1673B' : '#888'} />
+              <div className="category-mgmt-icon" style={{ background: c.active ? 'var(--color-terracotta-10)' : 'var(--color-cream-dark)' }}>
+                <Layers size={16} color={c.active ? 'var(--color-terracotta)' : 'var(--color-ink-40)'} />
               </div>
               <div className="flex gap-1" style={{ alignItems: 'center' }}>
                 <button
@@ -205,7 +205,7 @@ export default function AdminCategories() {
 
       {showModal && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-          <div className="card card-pad" style={{ width: '100%', maxWidth: 480, backgroundColor: '#fff', borderRadius: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.15)' }}>
+          <div className="card card-pad" style={{ width: '100%', maxWidth: 480, borderRadius: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
             <div className="flex justify-between items-center mb-4" style={{ borderBottom: '1px solid var(--color-ink-10)', paddingBottom: 12 }}>
               <h3 className="form-section-title" style={{ margin: 0, fontSize: 16 }}>
                 {editingCategory ? 'Edit Category' : 'Add New Category'}

@@ -167,7 +167,7 @@ export default function TestPaymentModal({ isOpen, onClose, onSuccess, amount })
                   value={upiId} 
                   onChange={(e) => setUpiId(e.target.value)} 
                   className="form-input" 
-                  style={{ fontSize: 13, background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 10, padding: '10px 12px' }}
+                  style={{ fontSize: 13, background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: 10, padding: '10px 12px' }}
                 />
               </div>
             )}
@@ -177,16 +177,16 @@ export default function TestPaymentModal({ isOpen, onClose, onSuccess, amount })
               <div>
                 <div style={{ marginBottom: 12 }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Card Number</div>
-                  <input type="text" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className="form-input" style={{ fontSize: 13, background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 10, padding: '10px 12px' }} />
+                  <input type="text" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className="form-input" style={{ fontSize: 13, background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: 10, padding: '10px 12px' }} />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>Expiry Date</div>
-                    <input type="text" value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} className="form-input" style={{ fontSize: 13, background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 10, padding: '10px 12px' }} />
+                    <input type="text" value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} className="form-input" style={{ fontSize: 13, background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: 10, padding: '10px 12px' }} />
                   </div>
                   <div>
                     <div style={{ fontSize: 12, fontWeight: 600, color: '#475569', marginBottom: 6 }}>CVV</div>
-                    <input type="text" value={cardCvv} onChange={(e) => setCardCvv(e.target.value)} className="form-input" style={{ fontSize: 13, background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: 10, padding: '10px 12px' }} />
+                    <input type="text" value={cardCvv} onChange={(e) => setCardCvv(e.target.value)} className="form-input" style={{ fontSize: 13, background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: 10, padding: '10px 12px' }} />
                   </div>
                 </div>
               </div>

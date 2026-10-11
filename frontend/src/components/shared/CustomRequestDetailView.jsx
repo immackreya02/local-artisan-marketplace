@@ -103,8 +103,8 @@ export default function CustomRequestDetailView({ request, role, backTo, onUpdat
 
           {/* Artisan Proposal Form */}
           {canDecide && (
-            <div className="card card-pad" style={{ borderColor: 'var(--color-terracotta-20, #F4D3C5)', backgroundColor: 'var(--color-sand-20, #FAF8F5)' }}>
-              <h3 className="form-section-title flex items-center gap-2"><Tag size={16} color="#C1673B" /> Submit Artisan Proposal &amp; Price Quote</h3>
+            <div className="card card-pad" style={{ borderColor: 'var(--color-terracotta-20, #F4D3C5)', backgroundColor: 'var(--color-terracotta-5)' }}>
+              <h3 className="form-section-title flex items-center gap-2"><Tag size={16} color="var(--color-terracotta)" /> Submit Artisan Proposal &amp; Price Quote</h3>
               <p style={{ fontSize: 13, color: 'var(--color-ink-50)', marginBottom: 16 }}>
                 Submit a custom price proposal, estimated production timeline, and technical craft details for the customer.
               </p>
@@ -135,9 +135,9 @@ export default function CustomRequestDetailView({ request, role, backTo, onUpdat
 
           {/* Artisan Progress Controls (Accepted / In Progress / Completed) */}
           {role === 'artisan' && ['Accepted', 'In Progress', 'Completed'].includes(request.status) && (
-            <div className="card card-pad" style={{ borderColor: 'var(--color-forest-30, #A8C4B4)', backgroundColor: 'var(--color-forest-05, #F2F7F4)' }}>
-              <h3 className="form-section-title flex items-center gap-2" style={{ color: '#2C5E43' }}>
-                <CheckCircle2 size={16} color="#2C5E43" /> Update Crafting &amp; Delivery Progress
+            <div className="card card-pad" style={{ borderColor: 'var(--color-forest-10)', backgroundColor: 'var(--color-forest-10)' }}>
+              <h3 className="form-section-title flex items-center gap-2" style={{ color: 'var(--color-forest)' }}>
+                <CheckCircle2 size={16} color="var(--color-forest)" /> Update Crafting &amp; Delivery Progress
               </h3>
               <p style={{ fontSize: 13, color: 'var(--color-ink-50)', marginBottom: 16 }}>
                 Manage the fulfillment stage for this custom craft request.
@@ -184,8 +184,8 @@ export default function CustomRequestDetailView({ request, role, backTo, onUpdat
 
           {/* Customer View of Artisan Proposal */}
           {role === 'customer' && hasProposal && (
-            <div className="card card-pad" style={{ borderColor: 'var(--color-forest-30, #A8C4B4)', backgroundColor: 'var(--color-forest-05, #F2F7F4)' }}>
-              <h3 className="form-section-title flex items-center gap-2" style={{ color: '#2C5E43' }}><CheckCircle2 size={16} color="#2C5E43" /> Artisan Proposal &amp; Quote Received</h3>
+            <div className="card card-pad" style={{ borderColor: 'var(--color-forest-10)', backgroundColor: 'var(--color-forest-10)' }}>
+              <h3 className="form-section-title flex items-center gap-2" style={{ color: 'var(--color-forest)' }}><CheckCircle2 size={16} color="var(--color-forest)" /> Artisan Proposal &amp; Quote Received</h3>
               <div className="spec-row"><span style={{ color: 'var(--color-ink-50)' }}>Proposed Price</span><span style={{ fontWeight: 600, fontSize: 16, color: '#C1673B' }}>₹{request.proposalPrice?.toLocaleString('en-IN')}</span></div>
               <div className="spec-row"><span style={{ color: 'var(--color-ink-50)' }}>Estimated Delivery</span><span style={{ fontWeight: 500 }}>{request.deliveryDays} business days</span></div>
               {request.proposalNotes && (

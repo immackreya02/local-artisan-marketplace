@@ -30,6 +30,9 @@
 
   --color-white: #ffffff;
   --color-card-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-sand-20: #FAF8F5;
+  --color-forest-05: #F2F7F4;
   --color-navbar-bg: rgba(247, 243, 236, 0.95);
   --color-dropdown-bg: #ffffff;
 
@@ -111,6 +114,9 @@
 
   --color-white: #1B1816;
   --color-card-bg: #1B1816;
+  --color-surface: #1B1816;
+  --color-sand-20: #1B1816;
+  --color-forest-05: rgba(84, 149, 113, 0.15);
   --color-navbar-bg: rgba(18, 16, 14, 0.92);
   --color-dropdown-bg: #24201D;
 

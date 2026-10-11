@@ -301,8 +301,8 @@ export default function Checkout() {
           {/* Inline Delivery Address Form */}
           {(showNewAddress || addresses.length === 0) && (
             <div style={{
-              background: 'var(--color-surface, #fff)',
-              border: '1px solid var(--color-ink-15, #e2e8f0)',
+              background: 'var(--color-card-bg)',
+              border: '1px solid var(--color-ink-10)',
               borderRadius: 8,
               padding: 20
             }}>

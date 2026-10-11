@@ -345,6 +345,11 @@
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus { border-color: var(--color-terracotta); }
+.form-select option,
+select option {
+  background: var(--color-card-bg);
+  color: var(--color-ink);
+}
 .form-textarea { resize: none; }
 .form-error {
   font-size: 12px;
