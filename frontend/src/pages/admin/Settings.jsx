@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Settings as SettingsIcon, Bell, ShieldCheck, Percent } from 'lucide-react'
+import { Settings as SettingsIcon, ShieldCheck, Percent } from 'lucide-react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/common/Button'
 import { useAuth } from '../../hooks/useAuth'
@@ -27,12 +27,7 @@ export default function AdminSettings() {
           <p style={{ fontSize: 12, color: 'var(--color-ink-40)', marginTop: 8 }}>Applies to all completed orders across the marketplace.</p>
         </div>
 
-        <div className="form-section" style={{ marginTop: 0 }}>
-          <h3 className="form-section-title"><Bell size={16} color="#C1673B" /> Notifications</h3>
-          <label className="toggle-row">New artisan applications <input type="checkbox" defaultChecked style={{ width: 16, height: 16, accentColor: 'var(--color-terracotta)' }} /></label>
-          <label className="toggle-row">Flagged products <input type="checkbox" defaultChecked style={{ width: 16, height: 16, accentColor: 'var(--color-terracotta)' }} /></label>
-          <label className="toggle-row">Weekly summary email <input type="checkbox" style={{ width: 16, height: 16, accentColor: 'var(--color-terracotta)' }} /></label>
-        </div>
+
 
         <div className="form-section" style={{ marginTop: 0 }}>
           <h3 className="form-section-title"><ShieldCheck size={16} color="#C1673B" /> Access &amp; Security</h3>

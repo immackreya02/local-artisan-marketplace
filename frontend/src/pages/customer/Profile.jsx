@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
-import { User, Mail, Phone, MapPin, Bell, MessageSquare, ShieldCheck, Check } from 'lucide-react'
+import { useState } from 'react'
+import { User, Mail, Phone, MapPin } from 'lucide-react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/common/Button'
 import { useAuth } from '../../hooks/useAuth'
-import { communicationService } from '../../services/communicationService'
 
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -15,25 +14,7 @@ export default function Profile() {
   const [errors, setErrors] = useState({})
   const [saved, setSaved] = useState(false)
 
-  // Notification Preferences State
-  const [channels, setChannels] = useState({ email: true, sms: true, whatsapp: true })
-
-  useEffect(() => {
-    // Load notification preferences from server
-    communicationService.getPreferences().then((res) => {
-      if (res.success && res.preferences) {
-        setChannels(res.preferences)
-      }
-    })
-  }, [])
-
   const set = (k) => (e) => { setForm((f) => ({ ...f, [k]: e.target.value })); setSaved(false) }
-
-  const handleChannelToggle = (ch) => {
-    const updated = { ...channels, [ch]: !channels[ch] }
-    setChannels(updated)
-    communicationService.updatePreferences(updated)
-  }
 
   const handleSave = () => {
     const newErrors = {}
@@ -43,7 +24,6 @@ export default function Profile() {
     setErrors(newErrors)
     if (Object.keys(newErrors).length === 0) {
       updateProfile({ name: form.name, email: form.email, phone: form.phone, location: form.location })
-      communicationService.updatePreferences({ ...channels, phone: form.phone })
       setSaved(true)
     }
   }
@@ -94,67 +74,6 @@ export default function Profile() {
           <div className="flex gap-3 mt-6">
             <Button onClick={handleSave}>Save Profile</Button>
             {saved && <span className="saved-note">Saved successfully.</span>}
-          </div>
-        </div>
-
-        {/* Multi-Channel Communication Preferences */}
-        <div className="card card-pad" style={{ background: 'var(--color-card-bg)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-            <Bell size={20} color="var(--color-terracotta)" />
-            <div>
-              <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-ink)' }}>Multi-Channel Communication Settings</h3>
-              <p style={{ fontSize: '12px', color: 'var(--color-ink-50)' }}>Choose how you receive order updates, delivery tracking, and custom quotes.</p>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', background: 'var(--color-cream-dark)', padding: '14px 16px', borderRadius: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Mail size={18} color="var(--color-terracotta)" />
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-ink)' }}>Email Notifications</div>
-                  <div style={{ fontSize: '12px', color: 'var(--color-ink-50)' }}>Invoices, order confirmations, and custom quotes</div>
-                </div>
-              </div>
-              <input
-                type="checkbox"
-                checked={channels.email}
-                onChange={() => handleChannelToggle('email')}
-                style={{ width: '18px', height: '18px', accentColor: 'var(--color-terracotta)', cursor: 'pointer' }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', background: 'var(--color-cream-dark)', padding: '14px 16px', borderRadius: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <MessageSquare size={18} color="#25D366" />
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-ink)' }}>WhatsApp Order Alerts</div>
-                  <div style={{ fontSize: '12px', color: 'var(--color-ink-50)' }}>Instant status updates and artisan chat support</div>
-                </div>
-              </div>
-              <input
-                type="checkbox"
-                checked={channels.whatsapp}
-                onChange={() => handleChannelToggle('whatsapp')}
-                style={{ width: '18px', height: '18px', accentColor: '#25D366', cursor: 'pointer' }}
-              />
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justify: 'space-between', background: 'var(--color-cream-dark)', padding: '14px 16px', borderRadius: '12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <Phone size={18} color="var(--color-forest)" />
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-ink)' }}>SMS & Delivery Alerts</div>
-                  <div style={{ fontSize: '12px', color: 'var(--color-ink-50)' }}>Time-sensitive dispatch & out-for-delivery SMS</div>
-                </div>
-              </div>
-              <input
-                type="checkbox"
-                checked={channels.sms}
-                onChange={() => handleChannelToggle('sms')}
-                style={{ width: '18px', height: '18px', accentColor: 'var(--color-forest)', cursor: 'pointer' }}
-              />
-            </div>
           </div>
         </div>
       </div>

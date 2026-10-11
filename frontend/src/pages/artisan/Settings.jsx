@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bell, Lock, CreditCard, User, Phone } from 'lucide-react'
+import { Lock, CreditCard, User, Phone } from 'lucide-react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import Button from '../../components/common/Button'
 import { useAuth } from '../../hooks/useAuth'
@@ -12,7 +12,6 @@ export default function ArtisanSettings() {
 
   const [name, setName] = useState(user?.name || '')
   const [phone, setPhone] = useState(user?.phone || shop?.phone || '')
-  const [notifs, setNotifs] = useState({ orders: true, lowStock: true, marketing: false })
   const [saved, setSaved] = useState(false)
 
   const handleSave = async () => {
@@ -48,15 +47,7 @@ export default function ArtisanSettings() {
           </div>
         </div>
 
-        <div className="form-section" style={{ marginTop: 0 }}>
-          <h3 className="form-section-title"><Bell size={16} color="#C1673B" /> Notifications</h3>
-          {[['orders', 'New order alerts'], ['lowStock', 'Low stock warnings'], ['marketing', 'Marketing tips & updates']].map(([k, label]) => (
-            <label key={k} className="toggle-row">
-              {label}
-              <input type="checkbox" checked={notifs[k]} onChange={(e) => setNotifs((n) => ({ ...n, [k]: e.target.checked }))} style={{ width: 16, height: 16, accentColor: 'var(--color-terracotta)' }} />
-            </label>
-          ))}
-        </div>
+
 
         <div className="form-section" style={{ marginTop: 0 }}>
           <h3 className="form-section-title"><Lock size={16} color="#C1673B" /> Security</h3>
