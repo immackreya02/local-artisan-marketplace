@@ -65,7 +65,7 @@ By eliminating intermediaries, the platform ensures fair remuneration for makers
 ## 📁 Repository Architecture
 
 ```text
-Local-Artisan-Platform/
+Local-Artisan-Marketplace/
 ├── backend/
 │   ├── src/
 │   │   ├── config/          # MongoDB Atlas connection with SRV DNS resolver
