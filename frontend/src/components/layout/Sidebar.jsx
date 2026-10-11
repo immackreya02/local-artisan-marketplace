@@ -10,20 +10,20 @@ export default function Sidebar({ items, accentLabel }) {
 
   const translateLabel = (lbl) => {
     switch (lbl) {
-      case 'Dashboard': return t('dashboard')
-      case 'Orders': return t('orders')
-      case 'Custom Requests': return t('customRequests')
-      case 'Wishlist': return t('wishlist')
-      case 'Addresses': return t('addresses')
-      case 'Profile': return t('profile')
-      case 'Shop Profile': return t('shopProfile')
-      case 'Products': return t('products')
-      case 'Analytics': return t('analytics')
-      case 'Reports': return t('reports')
-      case 'Settings': return t('settings')
-      case 'Users': return t('users')
-      case 'Artisans': return t('artisans')
-      case 'Categories': return t('categories')
+      case 'Dashboard': return t('dashboard', 'Dashboard')
+      case 'Orders': return t('orders', 'Orders')
+      case 'Custom Requests': return t('customRequests', 'Custom Requests')
+      case 'Wishlist': return t('wishlist', 'Wishlist')
+      case 'Addresses': return t('addresses', 'Addresses')
+      case 'Profile': return t('profile', 'Profile')
+      case 'Shop Profile': return t('shopProfile', 'Shop Profile')
+      case 'Products': return t('products', 'Products')
+      case 'Analytics': return t('analytics', 'Analytics')
+      case 'Reports': return t('reports', 'Reports')
+      case 'Settings': return t('settings', 'Settings')
+      case 'Users': return t('users', 'Users')
+      case 'Artisans': return t('artisans', 'Artisans')
+      case 'Categories': return t('categories', 'Categories')
       default: return lbl
     }
   }
