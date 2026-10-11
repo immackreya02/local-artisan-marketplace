@@ -75,14 +75,16 @@ export default function Login() {
     setError('')
 
     // Client-side validation
+    const trimmedEmail = email.trim()
+    const trimmedPassword = password.trim()
     const errors = {}
-    if (!email) errors.email = 'Email is required.'
-    else if (!validateEmail(email)) errors.email = 'Enter a valid email address.'
-    if (!password) errors.password = 'Password is required.'
+    if (!trimmedEmail) errors.email = 'Email is required.'
+    else if (!validateEmail(trimmedEmail)) errors.email = 'Enter a valid email address.'
+    if (!trimmedPassword) errors.password = 'Password is required.'
     setFieldErrors(errors)
     if (Object.keys(errors).length > 0) return
 
-    const res = await login(email, password)
+    const res = await login(trimmedEmail, trimmedPassword)
     if (!res.ok) return setError(res.error)
     const redirect = params.get('redirect')
     const defaultPath = res.user.role === 'customer' ? '/marketplace' : `/${res.user.role}/dashboard`
