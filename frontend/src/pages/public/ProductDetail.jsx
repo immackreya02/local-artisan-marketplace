@@ -29,7 +29,7 @@ export default function ProductDetail() {
   const { addToCart, wishlist, toggleWishlist } = useCart()
   const { user } = useAuth()
   const { orders } = useOrders()
-  const { reviews: allReviews, addReview, hasReviewed } = useReviews()
+  const { reviews: allReviews, addReview, hasReviewed, fetchProductReviews } = useReviews()
   const { t } = useLanguage()
   const [qty, setQty] = useState(1)
   const [tab, setTab] = useState('description')
@@ -40,10 +40,12 @@ export default function ProductDetail() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     setQty(1)
     setTab('description')
-    if (product && product.id) {
-      addRecentlyViewedId(product.id)
+    const targetId = product?.id || product?._id || productId
+    if (targetId) {
+      addRecentlyViewedId(targetId)
+      fetchProductReviews(targetId)
     }
-  }, [productId, product])
+  }, [productId, product, fetchProductReviews])
 
   if (!product || !isProductPubliclyVisible(product, shops)) {
     return (
@@ -205,17 +207,19 @@ export default function ProductDetail() {
 
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 16, alignItems: 'center' }}>
               {user?.role !== 'admin' && user?.role !== 'artisan' && (
-                <Link to={`/customer/custom-requests/new?shopId=${shop.id}&product=${encodeURIComponent(product.name)}`} style={{ display: 'inline-flex' }}>
-                  <Button variant="outline" size="sm"><PenLine size={13} /> {t('requestCustomization')}</Button>
-                </Link>
+                <>
+                  <Link to={`/customer/custom-requests/new?shopId=${shop.id}&product=${encodeURIComponent(product.name)}`} style={{ display: 'inline-flex' }}>
+                    <Button variant="outline" size="sm"><PenLine size={13} /> {t('requestCustomization')}</Button>
+                  </Link>
+                  <WhatsAppButton
+                    productName={product.name}
+                    shopName={shop.name}
+                    phone={shop.phone || shop.ownerPhone || '919829045671'}
+                    label={t('askWhatsApp')}
+                    size="sm"
+                  />
+                </>
               )}
-              <WhatsAppButton
-                productName={product.name}
-                shopName={shop.name}
-                phone={shop.phone || shop.ownerPhone || '919829045671'}
-                label={t('askWhatsApp')}
-                size="sm"
-              />
             </div>
 
             <div className="pd-tags">

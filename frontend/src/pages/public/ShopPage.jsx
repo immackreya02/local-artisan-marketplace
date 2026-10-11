@@ -68,9 +68,11 @@ export default function ShopPage() {
           </div>
           <div className="shop-header-actions" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
             {user?.role !== 'admin' && user?.role !== 'artisan' && (
-              <Link to={`/customer/custom-requests/new?shopId=${shop.id}`}><Button variant="outline"><PenLine size={14} /> Request Customization</Button></Link>
+              <>
+                <Link to={`/customer/custom-requests/new?shopId=${shop.id}`}><Button variant="outline"><PenLine size={14} /> Request Customization</Button></Link>
+                <WhatsAppButton shopName={shop.name} phone={shop.phone || '919876543210'} label="WhatsApp Seller" size="md" />
+              </>
             )}
-            <WhatsAppButton shopName={shop.name} phone={shop.phone || '919876543210'} label="WhatsApp Seller" size="md" />
           </div>
         </div>
 
