@@ -172,9 +172,13 @@ export default function ProductDetail() {
 
             <p className="pd-desc">{product.description}</p>
 
-            {user?.role === 'artisan' ? (
+            {user?.role === 'admin' ? (
               <div style={{ padding: '12px 16px', background: 'var(--color-cream-dark)', borderRadius: 10, fontSize: 13, color: 'var(--color-ink-60)', border: '1px solid var(--color-ink-10)', display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
-                <span>🎨 <strong>Artisan Studio Account:</strong> Dedicated to craft selling & storefront management.</span>
+                <span>🛡️ <strong>Administrator Account:</strong> Dedicated to platform moderation, catalog curation &amp; analytics.</span>
+              </div>
+            ) : user?.role === 'artisan' ? (
+              <div style={{ padding: '12px 16px', background: 'var(--color-cream-dark)', borderRadius: 10, fontSize: 13, color: 'var(--color-ink-60)', border: '1px solid var(--color-ink-10)', display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 12 }}>
+                <span>🎨 <strong>Artisan Studio Account:</strong> Dedicated to craft selling &amp; storefront management.</span>
               </div>
             ) : (
               <div className="pd-actions-row">
@@ -200,9 +204,11 @@ export default function ProductDetail() {
             </div>
 
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 16, alignItems: 'center' }}>
-              <Link to={`/customer/custom-requests/new?shopId=${shop.id}&product=${encodeURIComponent(product.name)}`} style={{ display: 'inline-flex' }}>
-                <Button variant="outline" size="sm"><PenLine size={13} /> {t('requestCustomization')}</Button>
-              </Link>
+              {user?.role !== 'admin' && user?.role !== 'artisan' && (
+                <Link to={`/customer/custom-requests/new?shopId=${shop.id}&product=${encodeURIComponent(product.name)}`} style={{ display: 'inline-flex' }}>
+                  <Button variant="outline" size="sm"><PenLine size={13} /> {t('requestCustomization')}</Button>
+                </Link>
+              )}
               <WhatsAppButton
                 productName={product.name}
                 shopName={shop.name}

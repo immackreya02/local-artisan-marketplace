@@ -11,10 +11,12 @@ import ProductCard from '../../components/common/ProductCard'
 import { categories } from '../../data/mockData'
 import { useShops } from '../../hooks/useShops'
 import { useProducts } from '../../hooks/useProducts'
+import { useAuth } from '../../hooks/useAuth'
 import { getPublicProducts } from '../../utils/productVisibility'
 
 export default function ShopPage() {
   const { shopId } = useParams()
+  const { user } = useAuth()
   const { shops, getShopById } = useShops()
   const { products } = useProducts()
   const shop = getShopById(shopId)
@@ -65,7 +67,9 @@ export default function ShopPage() {
             <p className="shop-header-desc">{shop.description}</p>
           </div>
           <div className="shop-header-actions" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <Link to={`/customer/custom-requests/new?shopId=${shop.id}`}><Button variant="outline"><PenLine size={14} /> Request Customization</Button></Link>
+            {user?.role !== 'admin' && user?.role !== 'artisan' && (
+              <Link to={`/customer/custom-requests/new?shopId=${shop.id}`}><Button variant="outline"><PenLine size={14} /> Request Customization</Button></Link>
+            )}
             <WhatsAppButton shopName={shop.name} phone={shop.phone || '919876543210'} label="WhatsApp Seller" size="md" />
           </div>
         </div>

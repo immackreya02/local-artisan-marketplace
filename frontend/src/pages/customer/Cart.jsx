@@ -27,6 +27,8 @@ export default function Cart() {
   useEffect(() => {
     if (user?.role === 'artisan') {
       navigate('/artisan/dashboard')
+    } else if (user?.role === 'admin') {
+      navigate('/admin/dashboard')
     }
   }, [user, navigate])
 

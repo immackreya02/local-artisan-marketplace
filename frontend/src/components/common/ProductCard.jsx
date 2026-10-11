@@ -4,6 +4,7 @@ import Swatch from './Swatch'
 import Rating from './Rating'
 import { categories } from '../../data/mockData'
 import { useCart } from '../../hooks/useCart'
+import { useAuth } from '../../hooks/useAuth'
 import { useShops } from '../../hooks/useShops'
 import { getAvailabilityBadge, isProductPurchasable } from '../../utils/productAvailability'
 
@@ -14,6 +15,7 @@ import { getProductMainImage, handleImageError } from '../../utils/productImageH
 // Cart suggestions, Wishlist, Product Detail related products, etc.)
 export default function ProductCard({ product }) {
   const { addToCart, wishlist, toggleWishlist } = useCart()
+  const { user } = useAuth()
   const { getShopById } = useShops()
   const shop = getShopById(product.shopId)
   const category = categories.find((c) => c.id === product.category || c.slug === product.categorySlug || c.name === product.categoryName)
@@ -22,6 +24,7 @@ export default function ProductCard({ product }) {
   const isWishlisted = wishlist.includes(product.id)
   const purchasable = isProductPurchasable(product)
   const availability = getAvailabilityBadge(product)
+  const isCustomerOrGuest = user?.role !== 'artisan' && user?.role !== 'admin'
 
   const imageUrl = getProductMainImage(product)
   const catKey = product.categorySlug || product.category || product.categoryName
@@ -36,12 +39,14 @@ export default function ProductCard({ product }) {
           style={{ height: 180, width: '100%', objectFit: 'cover', display: 'block' }}
         />
         {!purchasable && <span className="product-card-stock-badge">{product.availabilityType === 'Limited Edition' ? 'Sold Out' : 'Out of Stock'}</span>}
-        <button
-          onClick={(e) => { e.preventDefault(); toggleWishlist(product.id) }}
-          className="product-card-wishlist-btn"
-        >
-          <Heart size={14} fill={isWishlisted ? 'currentColor' : 'none'} color={isWishlisted ? '#C1673B' : '#8a7f70'} />
-        </button>
+        {isCustomerOrGuest && (
+          <button
+            onClick={(e) => { e.preventDefault(); toggleWishlist(product.id) }}
+            className="product-card-wishlist-btn"
+          >
+            <Heart size={14} fill={isWishlisted ? 'currentColor' : 'none'} color={isWishlisted ? '#C1673B' : '#8a7f70'} />
+          </button>
+        )}
       </Link>
       <div className="product-card-body">
         <span className="product-card-category">{categoryLabel}</span>
@@ -55,13 +60,16 @@ export default function ProductCard({ product }) {
             <div className="product-card-price">₹{product.price.toLocaleString('en-IN')}</div>
             <Rating value={product.rating} />
           </div>
-          <button
-            disabled={!purchasable}
-            onClick={() => addToCart(product.id, 1)}
-            className="product-card-cart-btn"
-          >
-            <ShoppingCart size={15} />
-          </button>
+          {isCustomerOrGuest && (
+            <button
+              disabled={!purchasable}
+              onClick={() => addToCart(product.id, 1)}
+              className="product-card-cart-btn"
+              title="Add to cart"
+            >
+              <ShoppingCart size={15} />
+            </button>
+          )}
         </div>
       </div>
     </div>

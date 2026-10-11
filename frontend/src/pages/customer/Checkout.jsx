@@ -81,6 +81,8 @@ export default function Checkout() {
   }, [user])
 
   if (!user) return <Navigate to="/login?redirect=/checkout" replace />
+  if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />
+  if (user.role === 'artisan') return <Navigate to="/artisan/dashboard" replace />
   if (cartProducts.length === 0) return <Navigate to="/marketplace" replace />
   const hasUnavailableItems = cartProducts.some(
     ({ product }) => !isProductPubliclyVisible(product, shops) || !isProductPurchasable(product)
